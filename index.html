@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Book Collection</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 html{color-scheme:light only;}
@@ -530,38 +530,67 @@ function exportExcel() {
   var owned = books.filter(function(b) { return (b.status || "owned") === "owned"; });
   var sold = books.filter(function(b) { return b.status === "sold"; });
   var wish = books.filter(function(b) { return b.status === "wishlist"; });
+
+  var catFills = {
+    "Quantum Mechanics":"E8F0E0","Classical Mechanics":"F5E8DA","Electrodynamics":"DCE6F0",
+    "L&L Series":"F0DADA","Statistical Mechanics":"F5F0DA","Thermal Physics":"F5F0DA",
+    "Solid State":"E4DCED","Condensed Matter":"DAEAED","Many-Body":"DAEAED",
+    "Phase Transitions":"DAEAED","Group Theory":"DDE8D8","General Relativity":"D8E4EE",
+    "Mathematical Physics":"DCE2E4","Geometry / Topology":"DCE2E4","Mathematics":"E8D8DE",
+    "Computational Physics":"DDD8E4","General / Popular":"EDEDED"
+  };
+  var headerStyle = {font:{bold:true,color:{rgb:"FFFFFF"},name:"Arial",sz:10},fill:{fgColor:{rgb:"2F5496"}},alignment:{horizontal:"center",vertical:"center",wrapText:true},border:{top:{style:"thin",color:{rgb:"000000"}},bottom:{style:"thin",color:{rgb:"000000"}},left:{style:"thin",color:{rgb:"000000"}},right:{style:"thin",color:{rgb:"000000"}}}};
+  var thinBorder = {top:{style:"thin",color:{rgb:"CCCCCC"}},bottom:{style:"thin",color:{rgb:"CCCCCC"}},left:{style:"thin",color:{rgb:"CCCCCC"}},right:{style:"thin",color:{rgb:"CCCCCC"}}};
+
   function toRows(list) {
     return list.map(function(b) {
-      return {
-        "Category": b.cat || "",
-        "Title": b.title || "",
-        "Author(s)": b.author || "",
-        "Edition": b.edition || "",
-        "Year": b.year || "",
-        "Publisher": b.publisher || "",
-        "ISBN-10": b.isbn10 || "",
-        "ISBN-13": b.isbn13 || "",
-        "Pages": b.pages || "",
-        "Binding": b.binding || "",
-        "List Price": b.listPrice || "",
-        "Purchase Price": b.price || "",
-        "Currency": b.cur || "",
-        "Status": (b.status || "owned").charAt(0).toUpperCase() + (b.status || "owned").slice(1),
-        "Sale Price": b.salePrice || "",
-        "Notes": b.note || ""
-      };
+      return [b.cat||"", b.title||"", b.author||"", b.edition||"", b.year||"", b.publisher||"", b.isbn10||"", b.isbn13||"", b.pages||"", b.binding||"", b.listPrice||"", b.price||"", b.cur||"", (b.status||"owned").charAt(0).toUpperCase()+(b.status||"owned").slice(1), b.salePrice||"", b.note||""];
     });
   }
-  var cols = [{wch:18},{wch:45},{wch:30},{wch:8},{wch:6},{wch:25},{wch:14},{wch:16},{wch:6},{wch:12},{wch:12},{wch:14},{wch:8},{wch:10},{wch:12},{wch:35}];
+
+  function buildSheet(list) {
+    var headers = ["Category","Title","Author(s)","Edition","Year","Publisher","ISBN-10","ISBN-13","Pages","Binding","List Price","Purchase Price","Currency","Status","Sale Price","Notes"];
+    var data = [headers].concat(toRows(list));
+    var ws = XLSX.utils.aoa_to_sheet(data);
+    ws["!cols"] = [{wch:18},{wch:45},{wch:30},{wch:8},{wch:6},{wch:25},{wch:14},{wch:16},{wch:6},{wch:12},{wch:12},{wch:14},{wch:8},{wch:10},{wch:12},{wch:35}];
+
+    // Style header row
+    for (var c = 0; c < headers.length; c++) {
+      var addr = XLSX.utils.encode_cell({r:0, c:c});
+      if (ws[addr]) ws[addr].s = headerStyle;
+    }
+
+    // Style data rows with category colors
+    for (var r = 0; r < list.length; r++) {
+      var b = list[r];
+      var color = catFills[b.cat] || "FFFFFF";
+      var isSold = (b.status === "sold");
+      var rowStyle = {
+        fill: {fgColor:{rgb:color}},
+        font: {name:"Arial",sz:9,color:{rgb: isSold ? "999999" : "000000"}, strike: isSold},
+        border: thinBorder,
+        alignment: {vertical:"center", wrapText:true}
+      };
+      var centerStyle = {
+        fill: {fgColor:{rgb:color}},
+        font: {name:"Arial",sz:9,color:{rgb: isSold ? "999999" : "000000"}, strike: isSold},
+        border: thinBorder,
+        alignment: {horizontal:"center", vertical:"center"}
+      };
+      for (var c = 0; c < headers.length; c++) {
+        var addr = XLSX.utils.encode_cell({r:r+1, c:c});
+        if (ws[addr]) {
+          ws[addr].s = (c===3||c===4||c===8||c===12||c===13) ? centerStyle : rowStyle;
+        }
+      }
+    }
+    return ws;
+  }
+
   var wb = XLSX.utils.book_new();
-  var rows1 = toRows(owned.concat(sold));
-  var ws1 = XLSX.utils.json_to_sheet(rows1);
-  ws1["!cols"] = cols;
-  XLSX.utils.book_append_sheet(wb, ws1, "Collection");
+  XLSX.utils.book_append_sheet(wb, buildSheet(owned.concat(sold)), "Collection");
   if (wish.length) {
-    var ws2 = XLSX.utils.json_to_sheet(toRows(wish));
-    ws2["!cols"] = cols;
-    XLSX.utils.book_append_sheet(wb, ws2, "Wishlist");
+    XLSX.utils.book_append_sheet(wb, buildSheet(wish), "Wishlist");
   }
   XLSX.writeFile(wb, "book_collection_" + new Date().toISOString().slice(0, 10) + ".xlsx");
 }
