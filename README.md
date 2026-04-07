@@ -13,9 +13,13 @@ A lightweight, browser-based tool for managing academic book collections with re
 
 ## Usage
 
-Visit **[https://YOUR_USERNAME.github.io/book-collection/](https://YOUR_USERNAME.github.io/book-collection/)** and start adding books.
+Visit **[https://hakuunnorei.github.io/book-collection/](https://hakuunnorei.github.io/book-collection/)** and start adding books.
 
 Or download `index.html` and open it directly in any browser.
+
+## Data & Privacy
+
+All book data is stored exclusively in your browser's localStorage. Nothing is sent to any server. Each user's collection is completely private and independent.
 
 ## Data Portability
 
