@@ -162,10 +162,78 @@ h1{font-size:28px;font-weight:700;letter-spacing:-.5px;border-bottom:2px solid #
 
 <script>
 var DEFAULT_BOOKS = [
-{cat:"Quantum Mechanics",title:"Modern Quantum Mechanics (3rd)",author:"Sakurai, J.J. & Napolitano, J.J.",price:null,cur:null,note:"Sample entry",status:"owned"},
-{cat:"Classical Mechanics",title:"Classical Mechanics",author:"Goldstein, H., Poole, C.P. & Safko, J.L.",price:null,cur:null,note:"Sample entry",status:"owned"},
-{cat:"Electrodynamics",title:"Introduction to Electrodynamics (4th)",author:"Griffiths, D.J.",price:null,cur:null,note:"Sample entry",status:"owned"},
-{cat:"Condensed Matter",title:"Quantum Field Theory and Condensed Matter",author:"Shankar, R.",price:null,cur:null,note:"Sample entry",status:"wishlist"}
+{cat:"Quantum Mechanics",title:"Modern Quantum Mechanics (Rev. Ed.) #1",author:"Sakurai (ed. Tuan)",price:80,cur:"USD",note:"Addison-Wesley 1994",status:"owned"},
+{cat:"Quantum Mechanics",title:"Modern Quantum Mechanics (Rev. Ed.) #2",author:"Sakurai (ed. Tuan)",price:130,cur:"USD",note:"Addison-Wesley 1994, Sealed",status:"owned"},
+{cat:"Quantum Mechanics",title:"Principles of Quantum Mechanics",author:"Shankar, R.",price:89.99,cur:"USD",status:"owned"},
+{cat:"Quantum Mechanics",title:"Introduction to Quantum Mechanics (3rd)",author:"Griffiths, D.J.",price:72000,cur:"KRW",status:"owned"},
+{cat:"Quantum Mechanics",title:"The Principles of Quantum Mechanics",author:"Dirac, P.A.M.",price:21.99,cur:"USD",status:"owned"},
+{cat:"Quantum Mechanics",title:"Quantum Physics",author:"Gasiorowicz, S.",price:53000,cur:"KRW",status:"owned"},
+{cat:"Classical Mechanics",title:"Introduction to Classical Mechanics",author:"Morin, D.",price:72.99,cur:"GBP",status:"owned"},
+{cat:"Classical Mechanics",title:"Classical Mechanics",author:"Kibble, T.W.B. & Berkshire, F.H.",price:58,cur:"USD",status:"owned"},
+{cat:"Classical Mechanics",title:"Foundations of Mechanics",author:"Abraham, R. & Marsden, J.E.",price:83,cur:"USD",status:"owned"},
+{cat:"Classical Mechanics",title:"Mathematical Methods of Classical Mechanics",author:"Arnold, V.I.",price:88,cur:"USD",note:"1st Eng. Ed. HC",status:"owned"},
+{cat:"Electrodynamics",title:"Classical Electrodynamics (2nd)",author:"Jackson, J.D.",price:61.81,cur:"USD",status:"owned"},
+{cat:"Electrodynamics",title:"Classical Electrodynamics (3rd)",author:"Jackson, J.D.",price:139000,cur:"KRW",note:"Keepsake",status:"owned"},
+{cat:"Electrodynamics",title:"Introduction to Electrodynamics (4th)",author:"Griffiths, D.J.",price:57000,cur:"KRW",note:"Hardcover",status:"owned"},
+{cat:"L&L Series",title:"Classical Theory of Fields (Vol. 2)",author:"Landau, L.D. & Lifshitz, E.M.",price:45.36,cur:"USD",status:"owned"},
+{cat:"L&L Series",title:"Quantum Mechanics (Vol. 3)",author:"Landau, L.D. & Lifshitz, E.M.",price:33.02,cur:"USD",status:"owned"},
+{cat:"L&L Series",title:"Statistical Physics Part 1 (Vol. 5)",author:"Landau, L.D. & Lifshitz, E.M.",price:59.94,cur:"USD",status:"owned"},
+{cat:"L&L Series",title:"Statistical Physics Part 2 (Vol. 9)",author:"Lifshitz, E.M. & Pitaevskii, L.P.",price:49.8,cur:"USD",status:"owned"},
+{cat:"Statistical Mechanics",title:"Fundamentals of Statistical and Thermal Physics",author:"Reif, F.",price:57000,cur:"KRW",status:"owned"},
+{cat:"Statistical Mechanics",title:"Statistical Mechanics (2nd)",author:"Pathria, R.K.",price:26.4,cur:"USD",status:"owned"},
+{cat:"Thermal Physics",title:"Thermal Physics",author:"Blundell, S.J. & Blundell, K.M.",price:52.99,cur:"GBP",status:"owned"},
+{cat:"Solid State",title:"Solid State Physics",author:"Ashcroft, N.W. & Mermin, N.D.",price:221520,cur:"KRW",status:"owned"},
+{cat:"Solid State",title:"Introduction to Solid State Physics (8th)",author:"Kittel, C.",price:147230,cur:"KRW",status:"owned"},
+{cat:"Solid State",title:"Problems in Solid State Physics",author:"Han (Lim)",price:67000,cur:"KRW",note:"Keepsake",status:"owned"},
+{cat:"Solid State",title:"The Oxford Solid State Basics",author:"Simon, S.H.",price:34.99,cur:"GBP",status:"owned"},
+{cat:"Condensed Matter",title:"Condensed Matter Field Theory (2nd)",author:"Altland, A. & Simons, B.D.",price:69.99,cur:"GBP",status:"owned"},
+{cat:"Condensed Matter",title:"QFT of Many-Body Systems",author:"Wen, X.-G.",price:60,cur:"GBP",status:"owned"},
+{cat:"Condensed Matter",title:"Quantum Phase Transitions (1st)",author:"Sachdev, S.",price:58,cur:"USD",status:"owned"},
+{cat:"Condensed Matter",title:"QFT and Condensed Matter",author:"Shankar, R.",price:52.99,cur:"GBP",status:"owned"},
+{cat:"Condensed Matter",title:"QFT for the Gifted Amateur",author:"Lancaster, T. & Blundell, S.J.",price:39.99,cur:"GBP",status:"owned"},
+{cat:"Condensed Matter",title:"Principles of Condensed Matter Physics",author:"Chaikin, P.M. & Lubensky, T.C.",price:88000,cur:"KRW",status:"owned"},
+{cat:"Many-Body",title:"Introduction to Many-Body Physics",author:"Coleman, P.",price:64.99,cur:"GBP",status:"owned"},
+{cat:"Many-Body",title:"Interacting Electrons and Quantum Magnetism",author:"Auerbach, A.",price:84.99,cur:"EUR",status:"owned"},
+{cat:"Many-Body",title:"Field Theories of Condensed Matter Physics (2nd)",author:"Fradkin, E.",price:64.99,cur:"GBP",status:"owned"},
+{cat:"Many-Body",title:"Quantum Many-Particle Systems",author:"Negele, J.W. & Orland, H.",price:74.14,cur:"USD",status:"owned"},
+{cat:"Many-Body",title:"Quantum Theory of Many-Particle Systems",author:"Fetter, A.L. & Walecka, J.D.",price:72190,cur:"KRW",status:"owned"},
+{cat:"Phase Transitions",title:"Lectures on Phase Transitions and the Renormalization Group",author:"Goldenfeld, N.",price:55000,cur:"KRW",status:"owned"},
+{cat:"Group Theory",title:"Group Theory and Quantum Mechanics",author:"Tinkham, M.",price:19.95,cur:"USD",status:"owned"},
+{cat:"Group Theory",title:"Group Theory: Application to Condensed Matter",author:"Dresselhaus, M.S. et al.",price:84.99,cur:"EUR",status:"owned"},
+{cat:"General Relativity",title:"A First Course in General Relativity (2nd)",author:"Schutz, B.F.",price:59.99,cur:"GBP",status:"owned"},
+{cat:"Mathematical Physics",title:"Mathematical Methods for Physicists (7th)",author:"Arfken, G.B., Weber, H.J. & Harris, F.E.",price:115,cur:"USD",status:"owned"},
+{cat:"Mathematical Physics",title:"Mathematical Methods in the Physical Sciences (3rd)",author:"Boas, M.L.",price:58000,cur:"KRW",status:"owned"},
+{cat:"Geometry / Topology",title:"The Geometry of Physics (2nd)",author:"Frankel, T.",price:74.99,cur:"GBP",status:"owned"},
+{cat:"Geometry / Topology",title:"Geometry, Topology and Physics (2nd)",author:"Nakahara, M.",price:74.99,cur:"GBP",status:"owned"},
+{cat:"Mathematics",title:"Linear Algebra (3rd)",author:"Lang, S.",price:54.99,cur:"USD",status:"owned"},
+{cat:"Mathematics",title:"Abstract Algebra (3rd)",author:"Herstein, I.N.",price:72000,cur:"KRW",status:"owned"},
+{cat:"Mathematics",title:"Algebra (GTM 73)",author:"Hungerford, T.W.",price:59.99,cur:"USD",status:"owned"},
+{cat:"Mathematics",title:"Principles of Mathematical Analysis (3rd)",author:"Rudin, W.",price:41000,cur:"KRW",status:"owned"},
+{cat:"Mathematics",title:"Galois Theory (2nd)",author:"Cox, D.A.",price:134.75,cur:"USD",status:"owned"},
+{cat:"Mathematics",title:"Introduction to Set Theory (3rd)",author:"Hrbacek, K. & Jech, T.",price:72000,cur:"KRW",status:"owned"},
+{cat:"Mathematics",title:"Functions of One Complex Variable I (GTM 11)",author:"Conway, J.B.",price:54.99,cur:"USD",status:"owned"},
+{cat:"Mathematics",title:"Elementary Differential Geometry (Rev. 2nd)",author:"O'Neill, B.",price:89.99,cur:"USD",status:"owned"},
+{cat:"Mathematics",title:"Introduction to Smooth Manifolds (GTM 218)",author:"Lee, J.M.",price:59.99,cur:"USD",status:"owned"},
+{cat:"Mathematics",title:"Lie Groups, Lie Algebras, and Representations (GTM 222)",author:"Hall, B.C.",price:59.99,cur:"USD",status:"owned"},
+{cat:"Mathematics",title:"Representation Theory (GTM 129)",author:"Fulton, W. & Harris, J.",price:59.99,cur:"USD",status:"owned"},
+{cat:"Mathematics",title:"Introduction to Symplectic Topology (3rd)",author:"McDuff, D. & Salamon, D.",price:79.99,cur:"GBP",status:"owned"},
+{cat:"Mathematics",title:"Elementary Numerical Analysis (3rd)",author:"Atkinson, K. & Han, W.",price:59000,cur:"KRW",status:"owned"},
+{cat:"Mathematics",title:"Introduction to Real Analysis (4th)",author:"Bartle, R.G.",price:43000,cur:"KRW",status:"owned"},
+{cat:"Mathematics",title:"Topology (2nd)",author:"Munkres, J.R.",price:69000,cur:"KRW",status:"owned"},
+{cat:"Mathematics",title:"An Introduction to Morse Theory",author:"Matsumoto, Y.",price:98800,cur:"KRW",status:"owned"},
+{cat:"Computational Physics",title:"Computational Physics",author:"Newman, M.",price:99140,cur:"KRW",status:"owned"},
+{cat:"Computational Physics",title:"Computational Problems for Physics",author:"Landau, R.H. et al.",price:60000,cur:"KRW",status:"owned"},
+{cat:"General / Popular",title:"The Feynman Lectures on Physics, Vol. I",author:"Feynman, R.P., Leighton, R.B. & Sands, M.",price:50,cur:"USD",note:"1963 original HC; 3 vols $150",status:"owned"},
+{cat:"General / Popular",title:"The Feynman Lectures on Physics, Vol. II",author:"Feynman, R.P., Leighton, R.B. & Sands, M.",price:50,cur:"USD",note:"1964 original HC",status:"owned"},
+{cat:"General / Popular",title:"The Feynman Lectures on Physics, Vol. III",author:"Feynman, R.P., Leighton, R.B. & Sands, M.",price:50,cur:"USD",note:"1965 original HC",status:"owned"},
+{cat:"General / Popular",title:"Exercises for the Feynman Lectures on Physics",author:"Feynman, R.P. et al.",price:80000,cur:"KRW",status:"owned"},
+{cat:"General / Popular",title:"The Road to Reality",author:"Penrose, R.",price:59900,cur:"KRW",status:"owned"},
+{cat:"General / Popular",title:"The Grand Design",author:"Hawking, S. & Mlodinow, L.",price:21360,cur:"KRW",status:"owned"},
+{cat:"General / Popular",title:"Concepts of Modern Physics",author:"Beiser, A.",price:43000,cur:"KRW",note:"Keepsake",status:"owned"},
+{cat:"Many-Body",title:"Many-Particle Physics (3rd)",author:"Mahan, G.D.",price:null,cur:null,note:"Top priority",status:"wishlist"},
+{cat:"Many-Body",title:"Many-Body Quantum Theory in Condensed Matter Physics",author:"Bruus, H. & Flensberg, K.",price:null,cur:null,status:"wishlist"},
+{cat:"Condensed Matter",title:"The Quantum Hall Effect",author:"Yoshioka, D.",price:null,cur:null,note:"Directly relevant to research",status:"wishlist"},
+{cat:"L&L Series",title:"Mechanics (Vol. 1)",author:"Landau, L.D. & Lifshitz, E.M.",price:null,cur:null,note:"Complete the series",status:"wishlist"}
 ];
 
 var CAT_COLORS = {"Quantum Mechanics":"#e8f0e0","Classical Mechanics":"#f5e8da","Electrodynamics":"#dce6f0","L&L Series":"#f0dada","Statistical Mechanics":"#f5f0da","Thermal Physics":"#f5f0da","Solid State":"#e4dced","Condensed Matter":"#daeaed","Many-Body":"#daeaed","Phase Transitions":"#daeaed","Group Theory":"#dde8d8","General Relativity":"#d8e4ee","Mathematical Physics":"#dce2e4","Geometry / Topology":"#dce2e4","Mathematics":"#e8d8de","Computational Physics":"#ddd8e4","General / Popular":"#ededed"};
@@ -460,23 +528,39 @@ function exportJSON() {
 
 function exportExcel() {
   var owned = books.filter(function(b) { return (b.status || "owned") === "owned"; });
+  var sold = books.filter(function(b) { return b.status === "sold"; });
   var wish = books.filter(function(b) { return b.status === "wishlist"; });
   function toRows(list) {
     return list.map(function(b) {
-      var cv = (b.price && b.cur && rates) ? cvt(b.price, b.cur, target) : null;
-      var row = { "Category": b.cat, "Title": b.title, "Author(s)": b.author || "", "Price": b.price || "", "Currency": b.cur || "" };
-      row["Converted (" + target + ")"] = cv ? Math.round(cv * 100) / 100 : "";
-      row["Notes"] = b.note || "";
-      return row;
+      return {
+        "Category": b.cat || "",
+        "Title": b.title || "",
+        "Author(s)": b.author || "",
+        "Edition": b.edition || "",
+        "Year": b.year || "",
+        "Publisher": b.publisher || "",
+        "ISBN-10": b.isbn10 || "",
+        "ISBN-13": b.isbn13 || "",
+        "Pages": b.pages || "",
+        "Binding": b.binding || "",
+        "List Price": b.listPrice || "",
+        "Purchase Price": b.price || "",
+        "Currency": b.cur || "",
+        "Status": (b.status || "owned").charAt(0).toUpperCase() + (b.status || "owned").slice(1),
+        "Sale Price": b.salePrice || "",
+        "Notes": b.note || ""
+      };
     });
   }
+  var cols = [{wch:18},{wch:45},{wch:30},{wch:8},{wch:6},{wch:25},{wch:14},{wch:16},{wch:6},{wch:12},{wch:12},{wch:14},{wch:8},{wch:10},{wch:12},{wch:35}];
   var wb = XLSX.utils.book_new();
-  var ws1 = XLSX.utils.json_to_sheet(toRows(owned));
-  ws1["!cols"] = [{ wch: 22 }, { wch: 48 }, { wch: 28 }, { wch: 12 }, { wch: 8 }, { wch: 16 }, { wch: 30 }];
+  var rows1 = toRows(owned.concat(sold));
+  var ws1 = XLSX.utils.json_to_sheet(rows1);
+  ws1["!cols"] = cols;
   XLSX.utils.book_append_sheet(wb, ws1, "Collection");
   if (wish.length) {
     var ws2 = XLSX.utils.json_to_sheet(toRows(wish));
-    ws2["!cols"] = [{ wch: 22 }, { wch: 48 }, { wch: 28 }, { wch: 12 }, { wch: 8 }, { wch: 16 }, { wch: 30 }];
+    ws2["!cols"] = cols;
     XLSX.utils.book_append_sheet(wb, ws2, "Wishlist");
   }
   XLSX.writeFile(wb, "book_collection_" + new Date().toISOString().slice(0, 10) + ".xlsx");
@@ -506,16 +590,35 @@ document.getElementById("fileXlsx").onchange = function(e) {
       var imported = [];
       wb.SheetNames.forEach(function(name) {
         var rows = XLSX.utils.sheet_to_json(wb.Sheets[name], { defval: "" });
-        var status = name.toLowerCase().indexOf("wish") >= 0 ? "wishlist" : "owned";
+        var isWishSheet = name.toLowerCase().indexOf("wish") >= 0;
         rows.forEach(function(row) {
           var title = row["Title"] || row["title"] || ""; if (!title) return;
-          var cat = row["Category"] || row["category"] || "Uncategorized";
-          var author = row["Author(s)"] || row["author"] || row["Authors"] || "";
-          var price = parseFloat(row["Price"] || row["price"]) || null;
+          var statusRaw = (row["Status"] || row["status"] || "").toLowerCase();
+          var status;
+          if (statusRaw === "sold") status = "sold";
+          else if (isWishSheet || statusRaw === "wishlist") status = "wishlist";
+          else status = "owned";
+          var price = parseFloat(row["Purchase Price"] || row["Price"] || row["price"]) || null;
           var cur = row["Currency"] || row["currency"] || "";
           if (price && !cur) cur = "KRW";
-          var note = row["Notes"] || row["note"] || row["notes"] || "";
-          imported.push({ cat: cat, title: title, author: author, price: price, cur: cur || null, note: note, status: status });
+          imported.push({
+            cat: row["Category"] || row["category"] || "Uncategorized",
+            title: title,
+            author: row["Author(s)"] || row["author"] || row["Authors"] || "",
+            edition: row["Edition"] || row["edition"] || "",
+            year: row["Year"] || row["year"] || "",
+            publisher: row["Publisher"] || row["publisher"] || "",
+            isbn10: row["ISBN-10"] || row["isbn10"] || "",
+            isbn13: row["ISBN-13"] || row["isbn13"] || "",
+            pages: row["Pages"] || row["pages"] || "",
+            binding: row["Binding"] || row["binding"] || "",
+            listPrice: parseFloat(row["List Price"] || row["listPrice"]) || null,
+            price: price,
+            cur: cur || null,
+            status: status,
+            salePrice: row["Sale Price"] || row["salePrice"] || "",
+            note: row["Notes"] || row["note"] || row["notes"] || ""
+          });
         });
       });
       if (imported.length && confirm("Found " + imported.length + " entries across " + wb.SheetNames.length + " sheet(s). Import?")) { books = imported; save(); render(); }
