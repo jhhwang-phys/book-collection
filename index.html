@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Book Collection</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+html{color-scheme:light only;}
+body{font-family:Arial,Helvetica,sans-serif;background:#fcfbf9;color:#222;padding:32px 24px;max-width:880px;margin:0 auto;line-height:1.5;}
+h1{font-size:28px;font-weight:700;letter-spacing:-.5px;border-bottom:2px solid #222;padding-bottom:8px;margin-bottom:4px;cursor:pointer;}
+.subtitle{font-size:12px;color:#777;margin-bottom:24px;}
+.toolbar{display:flex;justify-content:flex-end;gap:8px;margin-bottom:16px;flex-wrap:wrap;}
+.btn{padding:5px 14px;border-radius:3px;border:1px solid #bbb;background:#fff;color:#333;font-size:11px;cursor:pointer;letter-spacing:.3px;text-transform:uppercase;}
+.btn:hover{background:#f0efed;}
+.btn-primary{background:#333;color:#fff;border-color:#333;}
+.btn-primary:hover{background:#555;}
+.btn-danger{color:#a00;border-color:#daa;}
+.btn-danger:hover{background:#fef5f5;}
+.btn-accent{background:#1a472a;color:#fff;border-color:#1a472a;}
+.btn-accent:hover{background:#256636;}
+.dropdown{position:relative;display:inline-block;}
+.dropdown-menu{display:none;position:absolute;right:0;top:100%;margin-top:2px;background:#fff;border:1px solid #ccc;border-radius:3px;box-shadow:0 3px 12px rgba(0,0,0,.1);z-index:100;min-width:150px;overflow:hidden;}
+.dropdown-menu .dm-item{display:block;padding:7px 14px;font-size:11px;color:#333;cursor:pointer;letter-spacing:.3px;border-bottom:1px solid #f0f0f0;white-space:nowrap;}
+.dropdown-menu .dm-item:last-child{border-bottom:none;}
+.dropdown-menu .dm-item:hover{background:#f5f4f2;}
+.dropdown.open .dropdown-menu{display:block;}
+.search-area{margin-bottom:16px;}
+.search-toggle{display:flex;gap:0;margin-bottom:8px;}
+.search-toggle .st{padding:5px 16px;font-size:11px;font-weight:600;cursor:pointer;border:1px solid #ccc;color:#888;text-transform:uppercase;letter-spacing:.3px;background:#fff;}
+.search-toggle .st:first-child{border-radius:3px 0 0 3px;}
+.search-toggle .st:last-child{border-radius:0 3px 3px 0;border-left:none;}
+.search-toggle .st.active{background:#333;color:#fff;border-color:#333;}
+.search-area input{width:100%;padding:8px 12px;border:1px solid #ccc;border-radius:3px;font-size:13px;background:#fff;color:#222;}
+.search-area input:focus{outline:none;border-color:#333;}
+.search-area input::placeholder{color:#bbb;}
+.search-info{font-size:11px;color:#999;margin-top:4px;}
+.tabs{display:flex;gap:0;border-bottom:1px solid #ccc;margin-bottom:20px;}
+.tab{padding:8px 24px;font-size:13px;font-weight:600;cursor:pointer;color:#888;border-bottom:2px solid transparent;margin-bottom:-1px;letter-spacing:.3px;text-transform:uppercase;transition:all .15s;}
+.tab:hover{color:#444;}
+.tab.active{color:#222;border-bottom-color:#222;}
+.tab .badge{font-size:10px;color:#999;margin-left:4px;font-weight:400;}
+.tab.active .badge{color:#222;}
+.summary-bar{display:flex;justify-content:space-between;align-items:baseline;padding:16px 0;border-bottom:1px solid #ddd;margin-bottom:20px;}
+.summary-bar .left{display:flex;align-items:baseline;gap:12px;}
+.summary-bar .total-val{font-size:28px;font-weight:700;font-family:Menlo,Consolas,monospace;font-variant-numeric:tabular-nums;letter-spacing:-.5px;}
+.summary-bar .meta{font-size:12px;color:#888;}
+.summary-bar select{font-size:12px;padding:2px 6px;border:1px solid #ccc;background:#fff;color:#333;border-radius:2px;}
+.notice{padding:5px 10px;font-size:11px;color:#8a6d00;background:#fdf8e8;border:1px solid #e8d888;margin-bottom:16px;}
+.cat-list{display:flex;flex-direction:column;gap:4px;}
+.cat-wrap{border:1px solid #ddd;border-radius:2px;overflow:hidden;}
+.cat-header{display:flex;justify-content:space-between;align-items:center;padding:8px 14px;cursor:pointer;user-select:none;background:#f4f3f0;font-size:13px;font-weight:600;color:#333;}
+.cat-header:hover{background:#eae8e4;}
+.cat-header .left{display:flex;align-items:center;gap:8px;}
+.cat-header .arrow{font-size:10px;transition:transform .15s;display:inline-block;color:#666;}
+.cat-header .arrow.open{transform:rotate(90deg);}
+.cat-header .count{font-size:10px;color:#999;font-weight:400;}
+.cat-header .subtotal{font-family:Menlo,Consolas,monospace;font-variant-numeric:tabular-nums;font-weight:600;font-size:12px;}
+.book-list{background:#fff;}
+.book-row{display:flex;justify-content:space-between;align-items:center;padding:7px 14px 7px 32px;font-size:12.5px;border-top:1px solid #eee;cursor:pointer;}
+.book-row:hover{background:#faf9f7;}
+.book-row .binfo{flex:1;min-width:0;}
+.book-row .title{font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#222;font-style:italic;font-size:13px;}
+.book-row .author{color:#888;font-size:11px;}
+.book-row .note{margin-left:6px;color:#997a00;font-size:10px;}
+.book-row .price{text-align:right;flex-shrink:0;margin-left:12px;font-family:Menlo,Consolas,monospace;font-variant-numeric:tabular-nums;font-weight:500;color:#222;font-size:12px;}
+.book-row .price .orig{font-size:10px;color:#aaa;font-weight:400;}
+.book-row .price.empty{color:#ccc;font-weight:400;}
+.rates-footer{margin-top:24px;padding:10px 0;border-top:1px solid #ddd;font-size:11px;color:#999;}
+.rates-footer span{margin-left:12px;}
+.modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;z-index:1000;}
+.modal{background:#fff;border-radius:4px;padding:28px;width:90%;max-width:440px;box-shadow:0 4px 24px rgba(0,0,0,.12);max-height:90vh;overflow-y:auto;}
+.modal h3{font-size:15px;font-weight:700;margin-bottom:18px;border-bottom:1px solid #ddd;padding-bottom:8px;}
+.modal label{display:block;font-size:11px;font-weight:600;color:#666;margin-bottom:3px;margin-top:14px;text-transform:uppercase;letter-spacing:.5px;}
+.modal label:first-of-type{margin-top:0;}
+.modal input,.modal select{width:100%;padding:7px 10px;border:1px solid #ccc;border-radius:2px;font-size:13px;background:#fcfbf9;color:#222;}
+.modal input:focus,.modal select:focus{outline:none;border-color:#333;}
+.modal .actions{display:flex;justify-content:flex-end;gap:8px;margin-top:22px;flex-wrap:wrap;}
+.modal .hint{font-size:10px;color:#aaa;margin-top:2px;}
+.empty-state{text-align:center;padding:48px 20px;color:#aaa;font-size:14px;font-style:italic;}
+.store-links{margin-top:10px;padding-top:10px;border-top:1px solid #eee;}
+.store-links .sl-label{font-size:11px;font-weight:600;color:#666;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;}
+.store-links a{display:flex;justify-content:space-between;align-items:center;padding:5px 10px;margin-bottom:3px;border:1px solid #e0e0e0;border-radius:2px;text-decoration:none;color:#333;font-size:11px;transition:background .1s;}
+.store-links a:hover{background:#f5f4f2;}
+.store-links a .sl-name{font-weight:600;}
+.store-links a .sl-type{font-size:10px;color:#999;}
+.market-results{margin-top:12px;}
+.market-loading{text-align:center;padding:16px;color:#999;font-size:13px;font-style:italic;}
+.mw{border:1px solid #ddd;border-radius:2px;margin-bottom:8px;overflow:hidden;}
+.mw-header{padding:10px 14px;background:#f8f7f5;cursor:pointer;display:flex;justify-content:space-between;align-items:flex-start;}
+.mw-header:hover{background:#f0efed;}
+.mw-header .mw-title{font-size:13px;font-weight:600;color:#222;font-style:italic;}
+.mw-header .mw-meta{font-size:11px;color:#888;margin-top:2px;}
+.mw-header .mw-meta span{margin-right:10px;}
+.mw-body{border-top:1px solid #eee;background:#fff;}
+.ed{border-bottom:1px solid #f0f0f0;padding:8px 14px;}
+.ed:last-child{border-bottom:none;}
+.ed-top{cursor:pointer;}
+.ed-top:hover{color:#000;}
+.ed-info{font-size:12px;color:#444;}
+.ed-info span{margin-right:10px;}
+.ed-isbn{font-size:11px;color:#888;font-family:Menlo,Consolas,monospace;}
+.ed-expand{display:none;margin-top:8px;}
+.ed-expand .store-links{margin-top:4px;padding-top:4px;border-top:none;}
+.ed-expand .store-links a{padding:4px 8px;font-size:10px;}
+.ed-add-btn{margin-top:6px;font-size:10px;padding:3px 8px;}
+</style>
+</head>
+<body>
+<h1 id="home-link">Book Collection</h1>
+<div class="subtitle" id="timestamp"></div>
+<div class="toolbar">
+  <button class="btn btn-primary" id="add-btn">Add Book</button>
+  <div class="dropdown" id="dd-export">
+    <button class="btn" id="btn-export">Export &#9662;</button>
+    <div class="dropdown-menu">
+      <div class="dm-item" id="exp-xlsx">Excel (.xlsx)</div>
+      <div class="dm-item" id="exp-json">JSON (.json)</div>
+    </div>
+  </div>
+  <div class="dropdown" id="dd-import">
+    <button class="btn" id="btn-import">Import &#9662;</button>
+    <div class="dropdown-menu">
+      <div class="dm-item" id="imp-xlsx">From Excel (.xlsx)</div>
+      <div class="dm-item" id="imp-json">From JSON (.json)</div>
+    </div>
+  </div>
+  <input type="file" id="fileJson" accept=".json" style="display:none">
+  <input type="file" id="fileXlsx" accept=".xlsx,.xls" style="display:none">
+</div>
+
+<div class="search-area">
+  <div class="search-toggle">
+    <div class="st active" id="st-library">My Library</div>
+    <div class="st" id="st-market">Market Search</div>
+  </div>
+  <input type="text" id="search-input" placeholder="Search by title, author, category, or notes...">
+  <div class="search-info" id="search-info"></div>
+</div>
+
+<div id="library-view">
+  <div class="tabs">
+    <div class="tab active" id="tab-owned">Collection <span class="badge" id="owned-count"></span></div>
+    <div class="tab" id="tab-wishlist">Wishlist <span class="badge" id="wish-count"></span></div>
+  </div>
+  <div class="summary-bar">
+    <div class="left"><span class="total-val" id="total-display">...</span><span class="meta" id="count-info"></span></div>
+    <select id="currency-select"><option value="KRW">KRW</option><option value="USD">USD</option><option value="EUR">EUR</option><option value="GBP">GBP</option><option value="JPY">JPY</option></select>
+  </div>
+  <div class="notice" id="warning-box" style="display:none"></div>
+  <div class="cat-list" id="cat-list"></div>
+</div>
+
+<div id="market-view" style="display:none;">
+  <div style="padding:8px 0 4px;font-size:12px;color:#888;">Search any book to find editions, ISBNs, and listings across 6 stores.</div>
+  <div id="market-results"></div>
+</div>
+
+<div class="rates-footer" id="rates-footer"></div>
+<div id="modal-root"></div>
+
+<script>
+var DEFAULT_BOOKS = [
+{cat:"Quantum Mechanics",title:"Modern Quantum Mechanics (Rev. Ed.) #1",author:"Sakurai (ed. Tuan)",price:80,cur:"USD",note:"Addison-Wesley 1994",status:"owned"},
+{cat:"Quantum Mechanics",title:"Modern Quantum Mechanics (Rev. Ed.) #2",author:"Sakurai (ed. Tuan)",price:130,cur:"USD",note:"Addison-Wesley 1994, Sealed",status:"owned"},
+{cat:"Quantum Mechanics",title:"Principles of Quantum Mechanics",author:"Shankar, R.",price:89.99,cur:"USD",status:"owned"},
+{cat:"Quantum Mechanics",title:"Introduction to Quantum Mechanics (3rd)",author:"Griffiths, D.J.",price:72000,cur:"KRW",status:"owned"},
+{cat:"Quantum Mechanics",title:"The Principles of Quantum Mechanics",author:"Dirac, P.A.M.",price:21.99,cur:"USD",status:"owned"},
+{cat:"Quantum Mechanics",title:"Quantum Physics",author:"Gasiorowicz, S.",price:53000,cur:"KRW",status:"owned"},
+{cat:"Classical Mechanics",title:"Introduction to Classical Mechanics",author:"Morin, D.",price:72.99,cur:"GBP",status:"owned"},
+{cat:"Classical Mechanics",title:"Classical Mechanics",author:"Kibble, T.W.B. & Berkshire, F.H.",price:58,cur:"USD",status:"owned"},
+{cat:"Classical Mechanics",title:"Foundations of Mechanics",author:"Abraham, R. & Marsden, J.E.",price:83,cur:"USD",status:"owned"},
+{cat:"Classical Mechanics",title:"Mathematical Methods of Classical Mechanics",author:"Arnold, V.I.",price:88,cur:"USD",note:"1st Eng. Ed. HC",status:"owned"},
+{cat:"Electrodynamics",title:"Classical Electrodynamics (2nd)",author:"Jackson, J.D.",price:61.81,cur:"USD",status:"owned"},
+{cat:"Electrodynamics",title:"Classical Electrodynamics (3rd)",author:"Jackson, J.D.",price:139000,cur:"KRW",note:"Keepsake",status:"owned"},
+{cat:"Electrodynamics",title:"Introduction to Electrodynamics (4th)",author:"Griffiths, D.J.",price:57000,cur:"KRW",note:"Hardcover",status:"owned"},
+{cat:"L&L Series",title:"Classical Theory of Fields (Vol. 2)",author:"Landau, L.D. & Lifshitz, E.M.",price:45.36,cur:"USD",status:"owned"},
+{cat:"L&L Series",title:"Quantum Mechanics (Vol. 3)",author:"Landau, L.D. & Lifshitz, E.M.",price:33.02,cur:"USD",status:"owned"},
+{cat:"L&L Series",title:"Statistical Physics Part 1 (Vol. 5)",author:"Landau, L.D. & Lifshitz, E.M.",price:59.94,cur:"USD",status:"owned"},
+{cat:"L&L Series",title:"Statistical Physics Part 2 (Vol. 9)",author:"Lifshitz, E.M. & Pitaevskii, L.P.",price:49.8,cur:"USD",status:"owned"},
+{cat:"Statistical Mechanics",title:"Fundamentals of Statistical and Thermal Physics",author:"Reif, F.",price:57000,cur:"KRW",status:"owned"},
+{cat:"Statistical Mechanics",title:"Statistical Mechanics (2nd)",author:"Pathria, R.K.",price:26.4,cur:"USD",status:"owned"},
+{cat:"Thermal Physics",title:"Thermal Physics",author:"Blundell, S.J. & Blundell, K.M.",price:52.99,cur:"GBP",status:"owned"},
+{cat:"Solid State",title:"Solid State Physics",author:"Ashcroft, N.W. & Mermin, N.D.",price:221520,cur:"KRW",status:"owned"},
+{cat:"Solid State",title:"Introduction to Solid State Physics (8th)",author:"Kittel, C.",price:147230,cur:"KRW",status:"owned"},
+{cat:"Solid State",title:"Problems in Solid State Physics",author:"Han (Lim)",price:67000,cur:"KRW",note:"Keepsake",status:"owned"},
+{cat:"Solid State",title:"The Oxford Solid State Basics",author:"Simon, S.H.",price:34.99,cur:"GBP",status:"owned"},
+{cat:"Condensed Matter",title:"Condensed Matter Field Theory (2nd)",author:"Altland, A. & Simons, B.D.",price:69.99,cur:"GBP",status:"owned"},
+{cat:"Condensed Matter",title:"QFT of Many-Body Systems",author:"Wen, X.-G.",price:60,cur:"GBP",status:"owned"},
+{cat:"Condensed Matter",title:"Quantum Phase Transitions (1st)",author:"Sachdev, S.",price:58,cur:"USD",status:"owned"},
+{cat:"Condensed Matter",title:"QFT and Condensed Matter",author:"Shankar, R.",price:52.99,cur:"GBP",status:"owned"},
+{cat:"Condensed Matter",title:"QFT for the Gifted Amateur",author:"Lancaster, T. & Blundell, S.J.",price:39.99,cur:"GBP",status:"owned"},
+{cat:"Condensed Matter",title:"Principles of Condensed Matter Physics",author:"Chaikin, P.M. & Lubensky, T.C.",price:88000,cur:"KRW",status:"owned"},
+{cat:"Many-Body",title:"Introduction to Many-Body Physics",author:"Coleman, P.",price:64.99,cur:"GBP",status:"owned"},
+{cat:"Many-Body",title:"Interacting Electrons and Quantum Magnetism",author:"Auerbach, A.",price:84.99,cur:"EUR",status:"owned"},
+{cat:"Many-Body",title:"Field Theories of Condensed Matter Physics (2nd)",author:"Fradkin, E.",price:64.99,cur:"GBP",status:"owned"},
+{cat:"Many-Body",title:"Quantum Many-Particle Systems",author:"Negele, J.W. & Orland, H.",price:74.14,cur:"USD",status:"owned"},
+{cat:"Many-Body",title:"Quantum Theory of Many-Particle Systems",author:"Fetter, A.L. & Walecka, J.D.",price:72190,cur:"KRW",status:"owned"},
+{cat:"Phase Transitions",title:"Lectures on Phase Transitions and the Renormalization Group",author:"Goldenfeld, N.",price:55000,cur:"KRW",status:"owned"},
+{cat:"Group Theory",title:"Group Theory and Quantum Mechanics",author:"Tinkham, M.",price:19.95,cur:"USD",status:"owned"},
+{cat:"Group Theory",title:"Group Theory: Application to Condensed Matter",author:"Dresselhaus, M.S. et al.",price:84.99,cur:"EUR",status:"owned"},
+{cat:"General Relativity",title:"A First Course in General Relativity (2nd)",author:"Schutz, B.F.",price:59.99,cur:"GBP",status:"owned"},
+{cat:"Mathematical Physics",title:"Mathematical Methods for Physicists (7th)",author:"Arfken, G.B., Weber, H.J. & Harris, F.E.",price:115,cur:"USD",status:"owned"},
+{cat:"Mathematical Physics",title:"Mathematical Methods in the Physical Sciences (3rd)",author:"Boas, M.L.",price:58000,cur:"KRW",status:"owned"},
+{cat:"Geometry / Topology",title:"The Geometry of Physics (2nd)",author:"Frankel, T.",price:74.99,cur:"GBP",status:"owned"},
+{cat:"Geometry / Topology",title:"Geometry, Topology and Physics (2nd)",author:"Nakahara, M.",price:74.99,cur:"GBP",status:"owned"},
+{cat:"Mathematics",title:"Linear Algebra (3rd)",author:"Lang, S.",price:54.99,cur:"USD",status:"owned"},
+{cat:"Mathematics",title:"Abstract Algebra (3rd)",author:"Herstein, I.N.",price:72000,cur:"KRW",status:"owned"},
+{cat:"Mathematics",title:"Algebra (GTM 73)",author:"Hungerford, T.W.",price:59.99,cur:"USD",status:"owned"},
+{cat:"Mathematics",title:"Principles of Mathematical Analysis (3rd)",author:"Rudin, W.",price:41000,cur:"KRW",status:"owned"},
+{cat:"Mathematics",title:"Galois Theory (2nd)",author:"Cox, D.A.",price:134.75,cur:"USD",status:"owned"},
+{cat:"Mathematics",title:"Introduction to Set Theory (3rd)",author:"Hrbacek, K. & Jech, T.",price:72000,cur:"KRW",status:"owned"},
+{cat:"Mathematics",title:"Functions of One Complex Variable I (GTM 11)",author:"Conway, J.B.",price:54.99,cur:"USD",status:"owned"},
+{cat:"Mathematics",title:"Elementary Differential Geometry (Rev. 2nd)",author:"O'Neill, B.",price:89.99,cur:"USD",status:"owned"},
+{cat:"Mathematics",title:"Introduction to Smooth Manifolds (GTM 218)",author:"Lee, J.M.",price:59.99,cur:"USD",status:"owned"},
+{cat:"Mathematics",title:"Lie Groups, Lie Algebras, and Representations (GTM 222)",author:"Hall, B.C.",price:59.99,cur:"USD",status:"owned"},
+{cat:"Mathematics",title:"Representation Theory (GTM 129)",author:"Fulton, W. & Harris, J.",price:59.99,cur:"USD",status:"owned"},
+{cat:"Mathematics",title:"Introduction to Symplectic Topology (3rd)",author:"McDuff, D. & Salamon, D.",price:79.99,cur:"GBP",status:"owned"},
+{cat:"Mathematics",title:"Elementary Numerical Analysis (3rd)",author:"Atkinson, K. & Han, W.",price:59000,cur:"KRW",status:"owned"},
+{cat:"Mathematics",title:"Introduction to Real Analysis (4th)",author:"Bartle, R.G.",price:43000,cur:"KRW",status:"owned"},
+{cat:"Mathematics",title:"Topology (2nd)",author:"Munkres, J.R.",price:69000,cur:"KRW",status:"owned"},
+{cat:"Mathematics",title:"An Introduction to Morse Theory",author:"Matsumoto, Y.",price:98800,cur:"KRW",status:"owned"},
+{cat:"Computational Physics",title:"Computational Physics",author:"Newman, M.",price:99140,cur:"KRW",status:"owned"},
+{cat:"Computational Physics",title:"Computational Problems for Physics",author:"Landau, R.H. et al.",price:60000,cur:"KRW",status:"owned"},
+{cat:"General / Popular",title:"The Feynman Lectures on Physics, Vol. I",author:"Feynman, R.P., Leighton, R.B. & Sands, M.",price:50,cur:"USD",note:"1963 original HC; 3 vols $150",status:"owned"},
+{cat:"General / Popular",title:"The Feynman Lectures on Physics, Vol. II",author:"Feynman, R.P., Leighton, R.B. & Sands, M.",price:50,cur:"USD",note:"1964 original HC",status:"owned"},
+{cat:"General / Popular",title:"The Feynman Lectures on Physics, Vol. III",author:"Feynman, R.P., Leighton, R.B. & Sands, M.",price:50,cur:"USD",note:"1965 original HC",status:"owned"},
+{cat:"General / Popular",title:"Exercises for the Feynman Lectures on Physics",author:"Feynman, R.P. et al.",price:80000,cur:"KRW",status:"owned"},
+{cat:"General / Popular",title:"The Road to Reality",author:"Penrose, R.",price:59900,cur:"KRW",status:"owned"},
+{cat:"General / Popular",title:"The Grand Design",author:"Hawking, S. & Mlodinow, L.",price:21360,cur:"KRW",status:"owned"},
+{cat:"General / Popular",title:"Concepts of Modern Physics",author:"Beiser, A.",price:43000,cur:"KRW",note:"Keepsake",status:"owned"},
+{cat:"Many-Body",title:"Many-Particle Physics (3rd)",author:"Mahan, G.D.",price:null,cur:null,note:"Top priority",status:"wishlist"},
+{cat:"Many-Body",title:"Many-Body Quantum Theory in Condensed Matter Physics",author:"Bruus, H. & Flensberg, K.",price:null,cur:null,status:"wishlist"},
+{cat:"Condensed Matter",title:"The Quantum Hall Effect",author:"Yoshioka, D.",price:null,cur:null,note:"Directly relevant to research",status:"wishlist"},
+{cat:"L&L Series",title:"Mechanics (Vol. 1)",author:"Landau, L.D. & Lifshitz, E.M.",price:null,cur:null,note:"Complete the series",status:"wishlist"}
+];
+
+var CAT_COLORS = {"Quantum Mechanics":"#e8f0e0","Classical Mechanics":"#f5e8da","Electrodynamics":"#dce6f0","L&L Series":"#f0dada","Statistical Mechanics":"#f5f0da","Thermal Physics":"#f5f0da","Solid State":"#e4dced","Condensed Matter":"#daeaed","Many-Body":"#daeaed","Phase Transitions":"#daeaed","Group Theory":"#dde8d8","General Relativity":"#d8e4ee","Mathematical Physics":"#dce2e4","Geometry / Topology":"#dce2e4","Mathematics":"#e8d8de","Computational Physics":"#ddd8e4","General / Popular":"#ededed"};
+var SYM = {USD:"$",EUR:"\u20ac",GBP:"\u00a3",KRW:"\u20a9",JPY:"\u00a5"};
+var CATS = ["Quantum Mechanics","Classical Mechanics","Electrodynamics","L&L Series","Statistical Mechanics","Thermal Physics","Solid State","Condensed Matter","Many-Body","Phase Transitions","Group Theory","General Relativity","Mathematical Physics","Geometry / Topology","Mathematics","Computational Physics","General / Popular"];
+
+var books, rates = null, target = "KRW", openCat = null, currentTab = "owned", searchMode = "library", searchQuery = "", marketTimer = null;
+
+// Init books from storage or defaults
+try {
+  var stored = localStorage.getItem("book_collection_v3");
+  if (stored) { books = JSON.parse(stored); }
+  else {
+    var old = localStorage.getItem("book_collection_v2") || localStorage.getItem("book_collection");
+    if (old) { books = JSON.parse(old).map(function(b){ b.status = b.status || "owned"; return b; }); }
+    else { books = JSON.parse(JSON.stringify(DEFAULT_BOOKS)); }
+  }
+} catch(e) { books = JSON.parse(JSON.stringify(DEFAULT_BOOKS)); }
+
+function save() { localStorage.setItem("book_collection_v3", JSON.stringify(books)); }
+function cvt(a, f, t) { if (!rates || !f || !a) return null; return (a / (rates[f] || 1)) * (rates[t] || 1); }
+function fmt(v, c) { if (v == null) return "\u2014"; if (c === "KRW" || c === "JPY") return Math.round(v).toLocaleString("en"); return v.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ","); }
+
+function storeLinks(title, author, isbn13, isbn10, compact) {
+  var qt = encodeURIComponent(title);
+  var qa = encodeURIComponent(title + " " + (author || "").split(",")[0]);
+  var qi = isbn13 || isbn10;
+  var qIsbn = qi ? encodeURIComponent(qi) : null;
+  var h = '<div class="store-links"' + (compact ? ' style="margin-top:4px;padding-top:0;border-top:none;"' : '') + '>';
+  if (!compact) h += '<div class="sl-label">Search Listings</div>';
+  h += '<a href="https://search.kyobobook.co.kr/search?keyword=' + (qIsbn || qt) + '" target="_blank"><span class="sl-name">Kyobo</span><span class="sl-type">New</span></a>';
+  h += '<a href="https://www.aladin.co.kr/search/wsearchresult.aspx?SearchWord=' + (qIsbn || qt) + '" target="_blank"><span class="sl-name">Aladin</span><span class="sl-type">New</span></a>';
+  h += '<a href="https://www.aladin.co.kr/search/wsearchresult.aspx?SearchWord=' + (qIsbn || qt) + '&SearchTarget=UsedStore" target="_blank"><span class="sl-name">Aladin</span><span class="sl-type">Used</span></a>';
+  h += '<a href="https://www.abebooks.com/servlet/SearchResults?' + (qi ? 'isbn=' + qi : 'kn=' + qa) + '" target="_blank"><span class="sl-name">AbeBooks</span><span class="sl-type">New &amp; Used</span></a>';
+  h += '<a href="https://www.amazon.com/s?k=' + (qIsbn || qa) + '" target="_blank"><span class="sl-name">Amazon</span><span class="sl-type">New &amp; Used</span></a>';
+  h += '<a href="https://www.ebay.com/sch/i.html?_nkw=' + (qIsbn || qa) + '" target="_blank"><span class="sl-name">eBay</span><span class="sl-type">Listings</span></a>';
+  return h + '</div>';
+}
+
+// --- RENDER ---
+function render() {
+  var filtered = books.filter(function(b) { return (b.status || "owned") === currentTab; });
+  var totalForTab = filtered.length;
+  if (searchQuery && searchMode === "library") {
+    var sq = searchQuery;
+    filtered = filtered.filter(function(b) {
+      return (b.title || "").toLowerCase().indexOf(sq) >= 0 || (b.author || "").toLowerCase().indexOf(sq) >= 0 || (b.cat || "").toLowerCase().indexOf(sq) >= 0 || (b.note || "").toLowerCase().indexOf(sq) >= 0;
+    });
+  }
+  var si = document.getElementById("search-info");
+  if (searchQuery && searchMode === "library") { si.style.display = "block"; si.textContent = filtered.length + " of " + totalForTab + ' matching "' + searchQuery + '"'; }
+  else { si.style.display = "none"; si.textContent = ""; }
+
+  document.getElementById("owned-count").textContent = "(" + books.filter(function(b) { return (b.status || "owned") === "owned"; }).length + ")";
+  document.getElementById("wish-count").textContent = "(" + books.filter(function(b) { return b.status === "wishlist"; }).length + ")";
+
+  var cats = {}, tot = 0, pr = 0, un = 0;
+  filtered.forEach(function(b) {
+    b._idx = books.indexOf(b);
+    if (!cats[b.cat]) cats[b.cat] = { books: [], total: 0 };
+    cats[b.cat].books.push(b);
+    if (b.price && b.cur && rates) { var v = cvt(b.price, b.cur, target); if (v) { tot += v; cats[b.cat].total += v; pr++; } }
+    else un++;
+  });
+
+  document.getElementById("total-display").textContent = (SYM[target] || "") + fmt(tot, target) + " " + target;
+  document.getElementById("count-info").textContent = pr + " priced / " + un + " unpriced / " + filtered.length + " total";
+  var w = document.getElementById("warning-box");
+  if (un > 0) { w.style.display = "block"; w.textContent = un + " book(s) without price data excluded from total."; } else { w.style.display = "none"; }
+
+  if (!filtered.length) { document.getElementById("cat-list").innerHTML = '<div class="empty-state">' + (currentTab === "wishlist" ? "Wishlist is empty." : "No results.") + '</div>'; return; }
+
+  var h = "";
+  var allCats = CATS.slice();
+  Object.keys(cats).forEach(function(c) { if (allCats.indexOf(c) < 0) allCats.push(c); });
+
+  allCats.forEach(function(cat) {
+    var d = cats[cat]; if (!d) return;
+    var isO = searchQuery ? true : (openCat === cat);
+    var bg = CAT_COLORS[cat] || "#f0f0f0";
+    h += '<div class="cat-wrap"><div class="cat-header" style="background:' + bg + '" data-cat="' + cat + '"><div class="left"><span class="arrow' + (isO ? ' open' : '') + '">&#9654;</span><span class="name">' + cat + '</span><span class="count">' + d.books.length + '</span></div><span class="subtotal">' + (d.total > 0 ? (SYM[target] || "") + fmt(d.total, target) : "\u2014") + '</span></div>';
+    if (isO) {
+      h += '<div class="book-list">';
+      d.books.forEach(function(b) {
+        var cv = (b.price && b.cur) ? cvt(b.price, b.cur, target) : null;
+        h += '<div class="book-row" data-idx="' + b._idx + '"><div class="binfo"><div class="title">' + b.title + '</div><div class="author">' + (b.author || "") + (b.note ? '<span class="note">(' + b.note + ')</span>' : '') + '</div></div><div class="price' + (cv == null ? ' empty' : '') + '">';
+        if (cv != null) {
+          h += '<div>' + (SYM[target] || "") + fmt(cv, target) + '</div>';
+          if (b.cur !== target) h += '<div class="orig">' + (SYM[b.cur] || "") + (b.cur === "KRW" || b.cur === "JPY" ? Math.round(b.price).toLocaleString("en") : b.price) + ' ' + b.cur + '</div>';
+        } else { h += "\u2014"; }
+        h += '</div></div>';
+      });
+      h += '</div>';
+    }
+    h += '</div>';
+  });
+
+  document.getElementById("cat-list").innerHTML = h;
+
+  document.querySelectorAll(".cat-header").forEach(function(el) {
+    el.onclick = function() { openCat = (openCat === el.dataset.cat) ? null : el.dataset.cat; render(); };
+  });
+  document.querySelectorAll(".book-row").forEach(function(el) {
+    el.onclick = function(e) { e.stopPropagation(); openEditModal(parseInt(el.dataset.idx)); };
+  });
+
+  if (rates) {
+    document.getElementById("rates-footer").innerHTML = "<strong>Exchange rates (per 1 USD):</strong>" +
+      ["KRW","EUR","GBP","JPY"].map(function(c) { return '<span>' + c + ' ' + (rates[c] ? rates[c].toFixed(c === "KRW" || c === "JPY" ? 1 : 4) : "?") + '</span>'; }).join("");
+  }
+}
+
+// --- TABS ---
+document.getElementById("tab-owned").onclick = function() { currentTab = "owned"; openCat = null; searchQuery = ""; document.getElementById("search-input").value = ""; document.getElementById("tab-owned").classList.add("active"); document.getElementById("tab-wishlist").classList.remove("active"); render(); };
+document.getElementById("tab-wishlist").onclick = function() { currentTab = "wishlist"; openCat = null; searchQuery = ""; document.getElementById("search-input").value = ""; document.getElementById("tab-wishlist").classList.add("active"); document.getElementById("tab-owned").classList.remove("active"); render(); };
+document.getElementById("currency-select").onchange = function() { target = this.value; render(); };
+
+// --- SEARCH MODE ---
+document.getElementById("home-link").onclick = function() { setSearchMode("library"); };
+document.getElementById("st-library").onclick = function() { setSearchMode("library"); };
+document.getElementById("st-market").onclick = function() { setSearchMode("market"); };
+
+function setSearchMode(mode) {
+  searchMode = mode; searchQuery = "";
+  document.getElementById("search-input").value = "";
+  document.getElementById("st-library").classList.toggle("active", mode === "library");
+  document.getElementById("st-market").classList.toggle("active", mode === "market");
+  document.getElementById("search-input").placeholder = mode === "library" ? "Search by title, author, category, or notes..." : "Search any book by title, author, or ISBN...";
+  document.getElementById("library-view").style.display = mode === "library" ? "block" : "none";
+  document.getElementById("market-view").style.display = mode === "market" ? "block" : "none";
+  document.getElementById("search-info").textContent = "";
+  document.getElementById("market-results").innerHTML = "";
+  if (mode === "library") render();
+}
+
+document.getElementById("search-input").oninput = function() {
+  searchQuery = this.value.toLowerCase().trim();
+  if (searchMode === "library") { openCat = null; render(); }
+  else { clearTimeout(marketTimer); marketTimer = setTimeout(function() { if (searchQuery.length >= 2) doMarketSearch(searchQuery); else document.getElementById("market-results").innerHTML = ""; }, 600); }
+};
+
+// --- MARKET SEARCH ---
+function doMarketSearch(q) {
+  var res = document.getElementById("market-results");
+  res.innerHTML = '<div class="market-loading">Searching Open Library...</div>';
+  document.getElementById("search-info").textContent = "";
+  fetch("https://openlibrary.org/search.json?q=" + encodeURIComponent(q) + "&limit=8&fields=key,title,author_name,first_publish_year,edition_count")
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (!data.docs || !data.docs.length) { res.innerHTML = '<div class="market-loading">No results found.</div>'; return; }
+      document.getElementById("search-info").textContent = data.docs.length + " works found";
+      var h = "";
+      data.docs.forEach(function(w, wi) {
+        var a = (w.author_name || []).join(", ");
+        var wid = "mw" + wi;
+        h += '<div class="mw"><div class="mw-header" data-wid="' + wid + '"><div><div class="mw-title">' + (w.title || "Untitled") + '</div><div class="mw-meta"><span>' + (a || "Unknown") + '</span><span>First: ' + (w.first_publish_year || "N/A") + '</span><span>' + (w.edition_count || "?") + ' editions</span></div></div></div>';
+        h += '<div class="mw-body" id="body-' + wid + '" style="display:none;" data-wk="' + w.key + '" data-title="' + (w.title || "").replace(/"/g, "&quot;") + '" data-author="' + a.replace(/"/g, "&quot;") + '"><div class="market-loading" id="load-' + wid + '">Loading editions...</div></div></div>';
+      });
+      res.innerHTML = h;
+      document.querySelectorAll(".mw-header").forEach(function(el) {
+        el.onclick = function() { toggleWork(el.dataset.wid); };
+      });
+    })
+    .catch(function(e) { res.innerHTML = '<div class="market-loading">Error: ' + e.message + '</div>'; });
+}
+
+function toggleWork(wid) {
+  var body = document.getElementById("body-" + wid);
+  if (body.style.display === "none") {
+    body.style.display = "block";
+    if (body.dataset.loaded) return;
+    body.dataset.loaded = "1";
+    var loader = document.getElementById("load-" + wid);
+    fetch("https://openlibrary.org" + body.dataset.wk + "/editions.json?limit=30")
+      .then(function(r) { return r.json(); })
+      .then(function(d) {
+        if (!d.entries || !d.entries.length) { loader.textContent = "No edition data."; return; }
+        var title = body.dataset.title, author = body.dataset.author;
+        var eds = d.entries.map(function(e) {
+          return { t: e.title || title, pub: (e.publishers || []).join(", "), yr: e.publish_date || "", pg: e.number_of_pages || "", i13: (e.isbn_13 || [])[0] || "", i10: (e.isbn_10 || [])[0] || "", fm: e.physical_format || "", ed: e.edition_name || "", lang: (e.languages || []).map(function(l) { return l.key.replace("/languages/", ""); }).join(", ") };
+        }).sort(function(a, b) { return (parseInt(b.yr) || 0) - (parseInt(a.yr) || 0); });
+        var h = "";
+        eds.forEach(function(e, i) {
+          var eid = wid + "e" + i;
+          var isbn = e.i13 || e.i10;
+          var meta = [];
+          if (e.yr) meta.push(e.yr); if (e.pub) meta.push(e.pub); if (e.fm) meta.push(e.fm); if (e.pg) meta.push(e.pg + "pp"); if (e.ed) meta.push(e.ed); if (e.lang && e.lang !== "eng") meta.push("Lang: " + e.lang);
+          h += '<div class="ed"><div class="ed-top" data-eid="' + eid + '"><div class="ed-info">' + meta.map(function(m) { return '<span>' + m + '</span>'; }).join("") + '</div>' + (isbn ? '<div class="ed-isbn">ISBN: ' + isbn + '</div>' : '') + '</div>';
+          h += '<div class="ed-expand" id="ed-' + eid + '">' + storeLinks(e.t, author, e.i13, e.i10, true);
+          h += '<button class="btn ed-add-btn" data-title="' + e.t.replace(/"/g, "&quot;") + '" data-author="' + author.replace(/"/g, "&quot;") + '" data-isbn="' + (isbn || "") + '" data-pub="' + e.pub.replace(/"/g, "&quot;") + '">Add to Wishlist</button></div></div>';
+        });
+        body.innerHTML = h;
+        body.querySelectorAll(".ed-top").forEach(function(el) {
+          el.onclick = function() { var ex = document.getElementById("ed-" + el.dataset.eid); ex.style.display = ex.style.display === "none" ? "block" : "none"; };
+        });
+        body.querySelectorAll(".ed-add-btn").forEach(function(btn) {
+          btn.onclick = function(ev) {
+            ev.stopPropagation();
+            var t = btn.dataset.title, a = btn.dataset.author, isbn = btn.dataset.isbn, pub = btn.dataset.pub;
+            books.push({ cat: "Uncategorized", title: t, author: a, price: null, cur: null, note: isbn && pub ? "ISBN: " + isbn + " / " + pub : isbn ? "ISBN: " + isbn : "", status: "wishlist" });
+            save(); render(); alert("Added to Wishlist: " + t);
+          };
+        });
+      })
+      .catch(function() { body.innerHTML = '<div class="market-loading">Failed to load.</div>'; });
+  } else { body.style.display = "none"; }
+}
+
+// --- MODAL ---
+var catOpts = CATS.map(function(c) { return { value: c, text: c }; });
+catOpts.push({ value: "__new__", text: "+ New category..." });
+var curOpts = [{value:"KRW",text:"KRW"},{value:"USD",text:"USD"},{value:"EUR",text:"EUR"},{value:"GBP",text:"GBP"},{value:"JPY",text:"JPY"}];
+var statusOpts = [{value:"owned",text:"Collection"},{value:"wishlist",text:"Wishlist"}];
+
+function showModal(title, fields, onSave, extraBtns, extraHTML) {
+  var r = document.getElementById("modal-root");
+  var h = '<div class="modal-overlay" id="mo"><div class="modal"><h3>' + title + '</h3>';
+  fields.forEach(function(f) {
+    h += '<label>' + f.label + '</label>';
+    if (f.type === "select") {
+      h += '<select id="m-' + f.id + '">' + f.options.map(function(o) { return '<option value="' + o.value + '"' + (o.value === String(f.value) ? ' selected' : '') + '>' + o.text + '</option>'; }).join("") + '</select>';
+    } else {
+      h += '<input id="m-' + f.id + '" type="' + (f.type || 'text') + '" value="' + (f.value != null ? f.value : '') + '" placeholder="' + (f.placeholder || '') + '">';
+    }
+    if (f.hint) h += '<div class="hint">' + f.hint + '</div>';
+  });
+  if (extraHTML) h += extraHTML;
+  h += '<div class="actions">';
+  if (extraBtns) extraBtns.forEach(function(b) { h += '<button class="btn ' + (b.cls || '') + '" id="m-' + b.id + '">' + b.text + '</button>'; });
+  h += '<button class="btn" id="m-cancel">Cancel</button><button class="btn btn-primary" id="m-save">Save</button></div></div></div>';
+  r.innerHTML = h;
+  document.getElementById("m-cancel").onclick = function() { r.innerHTML = ""; };
+  document.getElementById("mo").onclick = function(e) { if (e.target.id === "mo") r.innerHTML = ""; };
+  document.getElementById("m-save").onclick = function() { onSave(); r.innerHTML = ""; save(); render(); };
+  if (extraBtns) extraBtns.forEach(function(b) {
+    var el = document.getElementById("m-" + b.id);
+    if (el) el.onclick = function() { if (b.confirm && !confirm(b.confirm)) return; b.action(); r.innerHTML = ""; save(); render(); };
+  });
+}
+
+function openEditModal(idx) {
+  var b = books[idx];
+  var btns = [{ id: "del", text: "Delete", cls: "btn-danger", confirm: "Delete this entry?", action: function() { books.splice(idx, 1); } }];
+  if ((b.status || "owned") === "wishlist") btns.unshift({ id: "move", text: "Move to Collection", cls: "btn-accent", action: function() { books[idx].status = "owned"; } });
+  else btns.unshift({ id: "move", text: "Move to Wishlist", cls: "", action: function() { books[idx].status = "wishlist"; } });
+  showModal("Edit Entry", [
+    { id: "cat", label: "Category", type: "select", value: b.cat, options: catOpts },
+    { id: "title", label: "Title", value: b.title },
+    { id: "author", label: "Author(s)", value: b.author || "" },
+    { id: "price", label: "Price", type: "number", value: b.price || "", hint: "Numeric only (e.g. 55000 or 89.99)" },
+    { id: "cur", label: "Currency", type: "select", value: b.cur || "KRW", options: curOpts },
+    { id: "note", label: "Notes", value: b.note || "" }
+  ], function() {
+    var c = document.getElementById("m-cat").value; if (c === "__new__") c = prompt("New category name:") || b.cat;
+    books[idx] = { cat: c, title: document.getElementById("m-title").value, author: document.getElementById("m-author").value, price: parseFloat(document.getElementById("m-price").value) || null, cur: document.getElementById("m-cur").value, note: document.getElementById("m-note").value, status: books[idx].status };
+  }, btns, storeLinks(b.title, b.author, null, null, false));
+}
+
+document.getElementById("add-btn").onclick = function() {
+  showModal("Add Book", [
+    { id: "status", label: "Status", type: "select", value: currentTab, options: statusOpts },
+    { id: "cat", label: "Category", type: "select", value: "Quantum Mechanics", options: catOpts },
+    { id: "title", label: "Title", placeholder: "e.g. Quantum Mechanics 3rd Ed." },
+    { id: "author", label: "Author(s)", placeholder: "e.g. Sakurai, J.J." },
+    { id: "price", label: "Price", type: "number", placeholder: "e.g. 55000", hint: "Leave blank if unknown" },
+    { id: "cur", label: "Currency", type: "select", value: "KRW", options: curOpts },
+    { id: "note", label: "Notes", placeholder: "Optional" }
+  ], function() {
+    var c = document.getElementById("m-cat").value; if (c === "__new__") c = prompt("New category name:") || "Other";
+    books.push({ cat: c, title: document.getElementById("m-title").value, author: document.getElementById("m-author").value, price: parseFloat(document.getElementById("m-price").value) || null, cur: document.getElementById("m-cur").value, note: document.getElementById("m-note").value, status: document.getElementById("m-status").value });
+  });
+};
+
+// --- DROPDOWNS ---
+function toggleDD(id) { var el = document.getElementById(id); var wasOpen = el.classList.contains("open"); closeDD(); if (!wasOpen) el.classList.add("open"); }
+function closeDD() { document.querySelectorAll(".dropdown").forEach(function(d) { d.classList.remove("open"); }); }
+document.addEventListener("click", function(e) { if (!e.target.closest(".dropdown")) closeDD(); });
+
+document.getElementById("btn-export").onclick = function(e) { e.stopPropagation(); toggleDD("dd-export"); };
+document.getElementById("btn-import").onclick = function(e) { e.stopPropagation(); toggleDD("dd-import"); };
+document.getElementById("exp-json").onclick = function() { exportJSON(); closeDD(); };
+document.getElementById("exp-xlsx").onclick = function() { exportExcel(); closeDD(); };
+document.getElementById("imp-json").onclick = function() { document.getElementById("fileJson").click(); closeDD(); };
+document.getElementById("imp-xlsx").onclick = function() { document.getElementById("fileXlsx").click(); closeDD(); };
+
+// --- EXPORT ---
+function exportJSON() {
+  var blob = new Blob([JSON.stringify(books, null, 2)], { type: "application/json" });
+  var a = document.createElement("a"); a.href = URL.createObjectURL(blob);
+  a.download = "book_collection_" + new Date().toISOString().slice(0, 10) + ".json"; a.click();
+}
+
+function exportExcel() {
+  var owned = books.filter(function(b) { return (b.status || "owned") === "owned"; });
+  var wish = books.filter(function(b) { return b.status === "wishlist"; });
+  function toRows(list) {
+    return list.map(function(b) {
+      var cv = (b.price && b.cur && rates) ? cvt(b.price, b.cur, target) : null;
+      var row = { "Category": b.cat, "Title": b.title, "Author(s)": b.author || "", "Price": b.price || "", "Currency": b.cur || "" };
+      row["Converted (" + target + ")"] = cv ? Math.round(cv * 100) / 100 : "";
+      row["Notes"] = b.note || "";
+      return row;
+    });
+  }
+  var wb = XLSX.utils.book_new();
+  var ws1 = XLSX.utils.json_to_sheet(toRows(owned));
+  ws1["!cols"] = [{ wch: 22 }, { wch: 48 }, { wch: 28 }, { wch: 12 }, { wch: 8 }, { wch: 16 }, { wch: 30 }];
+  XLSX.utils.book_append_sheet(wb, ws1, "Collection");
+  if (wish.length) {
+    var ws2 = XLSX.utils.json_to_sheet(toRows(wish));
+    ws2["!cols"] = [{ wch: 22 }, { wch: 48 }, { wch: 28 }, { wch: 12 }, { wch: 8 }, { wch: 16 }, { wch: 30 }];
+    XLSX.utils.book_append_sheet(wb, ws2, "Wishlist");
+  }
+  XLSX.writeFile(wb, "book_collection_" + new Date().toISOString().slice(0, 10) + ".xlsx");
+}
+
+// --- IMPORT ---
+document.getElementById("fileJson").onchange = function(e) {
+  var f = e.target.files[0]; if (!f) return;
+  var r = new FileReader();
+  r.onload = function(ev) {
+    try {
+      var d = JSON.parse(ev.target.result);
+      if (Array.isArray(d) && confirm("Import " + d.length + " entries? This overwrites current data.")) {
+        books = d.map(function(b) { b.status = b.status || "owned"; return b; }); save(); render();
+      }
+    } catch(err) { alert("Invalid JSON file."); }
+  };
+  r.readAsText(f); e.target.value = "";
+};
+
+document.getElementById("fileXlsx").onchange = function(e) {
+  var f = e.target.files[0]; if (!f) return;
+  var r = new FileReader();
+  r.onload = function(ev) {
+    try {
+      var wb = XLSX.read(ev.target.result, { type: "array" });
+      var imported = [];
+      wb.SheetNames.forEach(function(name) {
+        var rows = XLSX.utils.sheet_to_json(wb.Sheets[name], { defval: "" });
+        var status = name.toLowerCase().indexOf("wish") >= 0 ? "wishlist" : "owned";
+        rows.forEach(function(row) {
+          var title = row["Title"] || row["title"] || ""; if (!title) return;
+          var cat = row["Category"] || row["category"] || "Uncategorized";
+          var author = row["Author(s)"] || row["author"] || row["Authors"] || "";
+          var price = parseFloat(row["Price"] || row["price"]) || null;
+          var cur = row["Currency"] || row["currency"] || "";
+          if (price && !cur) cur = "KRW";
+          var note = row["Notes"] || row["note"] || row["notes"] || "";
+          imported.push({ cat: cat, title: title, author: author, price: price, cur: cur || null, note: note, status: status });
+        });
+      });
+      if (imported.length && confirm("Found " + imported.length + " entries across " + wb.SheetNames.length + " sheet(s). Import?")) { books = imported; save(); render(); }
+      else if (!imported.length) { alert("No valid entries found. Ensure columns include at least: Title."); }
+    } catch(err) { alert("Failed to read Excel file: " + err.message); }
+  };
+  r.readAsArrayBuffer(f); e.target.value = "";
+};
+
+// --- INIT ---
+(function init() {
+  fetch("https://api.exchangerate-api.com/v4/latest/USD")
+    .then(function(r) { return r.json(); })
+    .then(function(data) { rates = data.rates; afterRates(); })
+    .catch(function() {
+      fetch("https://open.er-api.com/v6/latest/USD")
+        .then(function(r) { return r.json(); })
+        .then(function(data) { rates = data.rates; afterRates(); })
+        .catch(function() { document.getElementById("total-display").textContent = "Failed to load rates"; render(); });
+    });
+  function afterRates() {
+    document.getElementById("timestamp").textContent = "Rates updated: " + new Date().toLocaleString("en-US", { timeZone: "Asia/Seoul", dateStyle: "medium", timeStyle: "short" });
+    render();
+  }
+})();
+</script>
+</body>
+</html>
