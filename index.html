@@ -542,17 +542,34 @@ function exportExcel() {
   var headerStyle = {font:{bold:true,color:{rgb:"FFFFFF"},name:"Arial",sz:10},fill:{fgColor:{rgb:"2F5496"}},alignment:{horizontal:"center",vertical:"center",wrapText:true},border:{top:{style:"thin",color:{rgb:"000000"}},bottom:{style:"thin",color:{rgb:"000000"}},left:{style:"thin",color:{rgb:"000000"}},right:{style:"thin",color:{rgb:"000000"}}}};
   var thinBorder = {top:{style:"thin",color:{rgb:"CCCCCC"}},bottom:{style:"thin",color:{rgb:"CCCCCC"}},left:{style:"thin",color:{rgb:"CCCCCC"}},right:{style:"thin",color:{rgb:"CCCCCC"}}};
 
-  function toRows(list) {
-    return list.map(function(b) {
-      return [b.cat||"", b.title||"", b.author||"", b.edition||"", b.year||"", b.publisher||"", b.isbn10||"", b.isbn13||"", b.pages||"", b.binding||"", b.listPrice||"", b.price||"", b.cur||"", (b.status||"owned").charAt(0).toUpperCase()+(b.status||"owned").slice(1), b.salePrice||"", b.note||""];
+  // Sort by category order
+  function sortByCat(list) {
+    var order = CATS.slice();
+    return list.slice().sort(function(a, b) {
+      var ia = order.indexOf(a.cat); var ib = order.indexOf(b.cat);
+      if (ia < 0) ia = 999; if (ib < 0) ib = 999;
+      return ia - ib;
     });
   }
 
+  function toRow(b) {
+    return [b.cat||"", b.title||"", b.author||"", b.edition||"", b.year||"", b.publisher||"", b.isbn10||"", b.isbn13||"", b.pages||"", b.binding||"", b.listPrice||"", b.price||"", b.cur||"", (b.status||"owned").charAt(0).toUpperCase()+(b.status||"owned").slice(1), b.salePrice||"", b.note||""];
+  }
+
   function buildSheet(list) {
+    var sorted = sortByCat(list);
     var headers = ["Category","Title","Author(s)","Edition","Year","Publisher","ISBN-10","ISBN-13","Pages","Binding","List Price","Purchase Price","Currency","Status","Sale Price","Notes"];
-    var data = [headers].concat(toRows(list));
+    var data = [headers];
+    for (var i = 0; i < sorted.length; i++) data.push(toRow(sorted[i]));
     var ws = XLSX.utils.aoa_to_sheet(data);
     ws["!cols"] = [{wch:18},{wch:45},{wch:30},{wch:8},{wch:6},{wch:25},{wch:14},{wch:16},{wch:6},{wch:12},{wch:12},{wch:14},{wch:8},{wch:10},{wch:12},{wch:35}];
+
+    // Autofilter (dropdown on every column)
+    var lastCol = XLSX.utils.encode_col(headers.length - 1);
+    ws["!autofilter"] = { ref: "A1:" + lastCol + (sorted.length + 1) };
+
+    // Freeze top row
+    ws["!freeze"] = { xSplit: "1", ySplit: "1", topLeftCell: "B2", activePane: "bottomRight", state: "frozen" };
 
     // Style header row
     for (var c = 0; c < headers.length; c++) {
@@ -561,8 +578,8 @@ function exportExcel() {
     }
 
     // Style data rows with category colors
-    for (var r = 0; r < list.length; r++) {
-      var b = list[r];
+    for (var r = 0; r < sorted.length; r++) {
+      var b = sorted[r];
       var color = catFills[b.cat] || "FFFFFF";
       var isSold = (b.status === "sold");
       var rowStyle = {
