@@ -6,7 +6,8 @@
     "price": 80,
     "cur": "USD",
     "note": "Addison-Wesley 1994",
-    "status": "owned"
+    "status": "owned",
+    "_idx": 0
   },
   {
     "cat": "Quantum Mechanics",
@@ -15,7 +16,8 @@
     "price": 130,
     "cur": "USD",
     "note": "Addison-Wesley 1994, Sealed",
-    "status": "owned"
+    "status": "owned",
+    "_idx": 1
   },
   {
     "cat": "Quantum Mechanics",
@@ -23,7 +25,8 @@
     "author": "Shankar, R.",
     "price": 89.99,
     "cur": "USD",
-    "status": "owned"
+    "status": "owned",
+    "_idx": 2
   },
   {
     "cat": "Quantum Mechanics",
@@ -31,15 +34,18 @@
     "author": "Griffiths, D.J.",
     "price": 72000,
     "cur": "KRW",
-    "status": "owned"
+    "status": "owned",
+    "_idx": 3
   },
   {
     "cat": "Quantum Mechanics",
     "title": "The Principles of Quantum Mechanics",
     "author": "Dirac, P.A.M.",
-    "price": 21.99,
+    "price": 40,
     "cur": "USD",
-    "status": "owned"
+    "note": "",
+    "status": "owned",
+    "_idx": 4
   },
   {
     "cat": "Quantum Mechanics",
@@ -47,7 +53,8 @@
     "author": "Gasiorowicz, S.",
     "price": 53000,
     "cur": "KRW",
-    "status": "owned"
+    "status": "owned",
+    "_idx": 5
   },
   {
     "cat": "Classical Mechanics",
@@ -55,7 +62,8 @@
     "author": "Morin, D.",
     "price": 72.99,
     "cur": "GBP",
-    "status": "owned"
+    "status": "owned",
+    "_idx": 6
   },
   {
     "cat": "Classical Mechanics",
@@ -63,7 +71,8 @@
     "author": "Kibble, T.W.B. & Berkshire, F.H.",
     "price": 58,
     "cur": "USD",
-    "status": "owned"
+    "status": "owned",
+    "_idx": 7
   },
   {
     "cat": "Classical Mechanics",
@@ -71,7 +80,8 @@
     "author": "Abraham, R. & Marsden, J.E.",
     "price": 83,
     "cur": "USD",
-    "status": "owned"
+    "status": "owned",
+    "_idx": 8
   },
   {
     "cat": "Classical Mechanics",
@@ -80,7 +90,8 @@
     "price": 88,
     "cur": "USD",
     "note": "1st Eng. Ed. HC",
-    "status": "owned"
+    "status": "owned",
+    "_idx": 9
   },
   {
     "cat": "Electrodynamics",
@@ -88,7 +99,8 @@
     "author": "Jackson, J.D.",
     "price": 61.81,
     "cur": "USD",
-    "status": "owned"
+    "status": "owned",
+    "_idx": 10
   },
   {
     "cat": "Electrodynamics",
@@ -97,7 +109,8 @@
     "price": 139000,
     "cur": "KRW",
     "note": "Keepsake",
-    "status": "owned"
+    "status": "owned",
+    "_idx": 11
   },
   {
     "cat": "Electrodynamics",
@@ -106,7 +119,8 @@
     "price": 57000,
     "cur": "KRW",
     "note": "Hardcover",
-    "status": "owned"
+    "status": "owned",
+    "_idx": 12
   },
   {
     "cat": "L&L Series",
@@ -114,7 +128,8 @@
     "author": "Landau, L.D. & Lifshitz, E.M.",
     "price": 45.36,
     "cur": "USD",
-    "status": "owned"
+    "status": "owned",
+    "_idx": 13
   },
   {
     "cat": "L&L Series",
@@ -122,7 +137,8 @@
     "author": "Landau, L.D. & Lifshitz, E.M.",
     "price": 33.02,
     "cur": "USD",
-    "status": "owned"
+    "status": "owned",
+    "_idx": 14
   },
   {
     "cat": "L&L Series",
@@ -130,7 +146,8 @@
     "author": "Landau, L.D. & Lifshitz, E.M.",
     "price": 59.94,
     "cur": "USD",
-    "status": "owned"
+    "status": "owned",
+    "_idx": 15
   },
   {
     "cat": "L&L Series",
@@ -138,7 +155,8 @@
     "author": "Lifshitz, E.M. & Pitaevskii, L.P.",
     "price": 49.8,
     "cur": "USD",
-    "status": "owned"
+    "status": "owned",
+    "_idx": 16
   },
   {
     "cat": "Statistical Mechanics",
@@ -146,7 +164,8 @@
     "author": "Reif, F.",
     "price": 57000,
     "cur": "KRW",
-    "status": "owned"
+    "status": "owned",
+    "_idx": 17
   },
   {
     "cat": "Statistical Mechanics",
@@ -154,7 +173,8 @@
     "author": "Pathria, R.K.",
     "price": 26.4,
     "cur": "USD",
-    "status": "owned"
+    "status": "owned",
+    "_idx": 18
   },
   {
     "cat": "Thermal Physics",
@@ -162,7 +182,8 @@
     "author": "Blundell, S.J. & Blundell, K.M.",
     "price": 52.99,
     "cur": "GBP",
-    "status": "owned"
+    "status": "owned",
+    "_idx": 19
   },
   {
     "cat": "Solid State",
@@ -170,7 +191,8 @@
     "author": "Ashcroft, N.W. & Mermin, N.D.",
     "price": 221520,
     "cur": "KRW",
-    "status": "owned"
+    "status": "owned",
+    "_idx": 20
   },
   {
     "cat": "Solid State",
@@ -178,7 +200,8 @@
     "author": "Kittel, C.",
     "price": 147230,
     "cur": "KRW",
-    "status": "owned"
+    "status": "owned",
+    "_idx": 21
   },
   {
     "cat": "Solid State",
@@ -187,7 +210,8 @@
     "price": 67000,
     "cur": "KRW",
     "note": "Keepsake",
-    "status": "owned"
+    "status": "owned",
+    "_idx": 22
   },
   {
     "cat": "Solid State",
@@ -195,7 +219,8 @@
     "author": "Simon, S.H.",
     "price": 34.99,
     "cur": "GBP",
-    "status": "owned"
+    "status": "owned",
+    "_idx": 23
   },
   {
     "cat": "Condensed Matter",
@@ -203,7 +228,8 @@
     "author": "Altland, A. & Simons, B.D.",
     "price": 69.99,
     "cur": "GBP",
-    "status": "owned"
+    "status": "owned",
+    "_idx": 24
   },
   {
     "cat": "Condensed Matter",
@@ -211,7 +237,8 @@
     "author": "Wen, X.-G.",
     "price": 60,
     "cur": "GBP",
-    "status": "owned"
+    "status": "owned",
+    "_idx": 25
   },
   {
     "cat": "Condensed Matter",
@@ -219,7 +246,8 @@
     "author": "Sachdev, S.",
     "price": 58,
     "cur": "USD",
-    "status": "owned"
+    "status": "owned",
+    "_idx": 26
   },
   {
     "cat": "Condensed Matter",
@@ -227,7 +255,8 @@
     "author": "Shankar, R.",
     "price": 52.99,
     "cur": "GBP",
-    "status": "owned"
+    "status": "owned",
+    "_idx": 27
   },
   {
     "cat": "Condensed Matter",
@@ -235,7 +264,8 @@
     "author": "Lancaster, T. & Blundell, S.J.",
     "price": 39.99,
     "cur": "GBP",
-    "status": "owned"
+    "status": "owned",
+    "_idx": 28
   },
   {
     "cat": "Condensed Matter",
@@ -243,7 +273,8 @@
     "author": "Chaikin, P.M. & Lubensky, T.C.",
     "price": 88000,
     "cur": "KRW",
-    "status": "owned"
+    "status": "owned",
+    "_idx": 29
   },
   {
     "cat": "Many-Body",
@@ -251,7 +282,8 @@
     "author": "Coleman, P.",
     "price": 64.99,
     "cur": "GBP",
-    "status": "owned"
+    "status": "owned",
+    "_idx": 30
   },
   {
     "cat": "Many-Body",
@@ -259,7 +291,8 @@
     "author": "Auerbach, A.",
     "price": 84.99,
     "cur": "EUR",
-    "status": "owned"
+    "status": "owned",
+    "_idx": 31
   },
   {
     "cat": "Many-Body",
@@ -267,7 +300,8 @@
     "author": "Fradkin, E.",
     "price": 64.99,
     "cur": "GBP",
-    "status": "owned"
+    "status": "owned",
+    "_idx": 32
   },
   {
     "cat": "Many-Body",
@@ -275,7 +309,8 @@
     "author": "Negele, J.W. & Orland, H.",
     "price": 74.14,
     "cur": "USD",
-    "status": "owned"
+    "status": "owned",
+    "_idx": 33
   },
   {
     "cat": "Many-Body",
@@ -283,7 +318,8 @@
     "author": "Fetter, A.L. & Walecka, J.D.",
     "price": 72190,
     "cur": "KRW",
-    "status": "owned"
+    "status": "owned",
+    "_idx": 34
   },
   {
     "cat": "Phase Transitions",
@@ -291,7 +327,8 @@
     "author": "Goldenfeld, N.",
     "price": 55000,
     "cur": "KRW",
-    "status": "owned"
+    "status": "owned",
+    "_idx": 35
   },
   {
     "cat": "Group Theory",
@@ -299,7 +336,8 @@
     "author": "Tinkham, M.",
     "price": 19.95,
     "cur": "USD",
-    "status": "owned"
+    "status": "owned",
+    "_idx": 36
   },
   {
     "cat": "Group Theory",
@@ -307,7 +345,8 @@
     "author": "Dresselhaus, M.S. et al.",
     "price": 84.99,
     "cur": "EUR",
-    "status": "owned"
+    "status": "owned",
+    "_idx": 37
   },
   {
     "cat": "General Relativity",
@@ -315,7 +354,8 @@
     "author": "Schutz, B.F.",
     "price": 59.99,
     "cur": "GBP",
-    "status": "owned"
+    "status": "owned",
+    "_idx": 38
   },
   {
     "cat": "Mathematical Physics",
@@ -323,7 +363,8 @@
     "author": "Arfken, G.B., Weber, H.J. & Harris, F.E.",
     "price": 115,
     "cur": "USD",
-    "status": "owned"
+    "status": "owned",
+    "_idx": 39
   },
   {
     "cat": "Mathematical Physics",
@@ -331,7 +372,8 @@
     "author": "Boas, M.L.",
     "price": 58000,
     "cur": "KRW",
-    "status": "owned"
+    "status": "owned",
+    "_idx": 40
   },
   {
     "cat": "Geometry / Topology",
@@ -339,7 +381,8 @@
     "author": "Frankel, T.",
     "price": 74.99,
     "cur": "GBP",
-    "status": "owned"
+    "status": "owned",
+    "_idx": 41
   },
   {
     "cat": "Geometry / Topology",
@@ -347,7 +390,8 @@
     "author": "Nakahara, M.",
     "price": 74.99,
     "cur": "GBP",
-    "status": "owned"
+    "status": "owned",
+    "_idx": 42
   },
   {
     "cat": "Mathematics",
@@ -355,7 +399,8 @@
     "author": "Lang, S.",
     "price": 54.99,
     "cur": "USD",
-    "status": "owned"
+    "status": "owned",
+    "_idx": 43
   },
   {
     "cat": "Mathematics",
@@ -363,7 +408,8 @@
     "author": "Herstein, I.N.",
     "price": 72000,
     "cur": "KRW",
-    "status": "owned"
+    "status": "owned",
+    "_idx": 44
   },
   {
     "cat": "Mathematics",
@@ -371,7 +417,8 @@
     "author": "Hungerford, T.W.",
     "price": 59.99,
     "cur": "USD",
-    "status": "owned"
+    "status": "owned",
+    "_idx": 45
   },
   {
     "cat": "Mathematics",
@@ -379,7 +426,8 @@
     "author": "Rudin, W.",
     "price": 41000,
     "cur": "KRW",
-    "status": "owned"
+    "status": "owned",
+    "_idx": 46
   },
   {
     "cat": "Mathematics",
@@ -387,7 +435,8 @@
     "author": "Cox, D.A.",
     "price": 134.75,
     "cur": "USD",
-    "status": "owned"
+    "status": "owned",
+    "_idx": 47
   },
   {
     "cat": "Mathematics",
@@ -395,7 +444,8 @@
     "author": "Hrbacek, K. & Jech, T.",
     "price": 72000,
     "cur": "KRW",
-    "status": "owned"
+    "status": "owned",
+    "_idx": 48
   },
   {
     "cat": "Mathematics",
@@ -403,7 +453,8 @@
     "author": "Conway, J.B.",
     "price": 54.99,
     "cur": "USD",
-    "status": "owned"
+    "status": "owned",
+    "_idx": 49
   },
   {
     "cat": "Mathematics",
@@ -411,7 +462,8 @@
     "author": "O'Neill, B.",
     "price": 89.99,
     "cur": "USD",
-    "status": "owned"
+    "status": "owned",
+    "_idx": 50
   },
   {
     "cat": "Mathematics",
@@ -419,7 +471,8 @@
     "author": "Lee, J.M.",
     "price": 59.99,
     "cur": "USD",
-    "status": "owned"
+    "status": "owned",
+    "_idx": 51
   },
   {
     "cat": "Mathematics",
@@ -427,7 +480,8 @@
     "author": "Hall, B.C.",
     "price": 59.99,
     "cur": "USD",
-    "status": "owned"
+    "status": "owned",
+    "_idx": 52
   },
   {
     "cat": "Mathematics",
@@ -435,7 +489,8 @@
     "author": "Fulton, W. & Harris, J.",
     "price": 59.99,
     "cur": "USD",
-    "status": "owned"
+    "status": "owned",
+    "_idx": 53
   },
   {
     "cat": "Mathematics",
@@ -443,7 +498,8 @@
     "author": "McDuff, D. & Salamon, D.",
     "price": 79.99,
     "cur": "GBP",
-    "status": "owned"
+    "status": "owned",
+    "_idx": 54
   },
   {
     "cat": "Mathematics",
@@ -451,7 +507,8 @@
     "author": "Atkinson, K. & Han, W.",
     "price": 59000,
     "cur": "KRW",
-    "status": "owned"
+    "status": "owned",
+    "_idx": 55
   },
   {
     "cat": "Mathematics",
@@ -459,7 +516,8 @@
     "author": "Bartle, R.G.",
     "price": 43000,
     "cur": "KRW",
-    "status": "owned"
+    "status": "owned",
+    "_idx": 56
   },
   {
     "cat": "Mathematics",
@@ -467,7 +525,8 @@
     "author": "Munkres, J.R.",
     "price": 69000,
     "cur": "KRW",
-    "status": "owned"
+    "status": "owned",
+    "_idx": 57
   },
   {
     "cat": "Mathematics",
@@ -475,7 +534,8 @@
     "author": "Matsumoto, Y.",
     "price": 98800,
     "cur": "KRW",
-    "status": "owned"
+    "status": "owned",
+    "_idx": 58
   },
   {
     "cat": "Computational Physics",
@@ -483,7 +543,8 @@
     "author": "Newman, M.",
     "price": 99140,
     "cur": "KRW",
-    "status": "owned"
+    "status": "owned",
+    "_idx": 59
   },
   {
     "cat": "Computational Physics",
@@ -491,7 +552,8 @@
     "author": "Landau, R.H. et al.",
     "price": 60000,
     "cur": "KRW",
-    "status": "owned"
+    "status": "owned",
+    "_idx": 60
   },
   {
     "cat": "General / Popular",
@@ -500,7 +562,8 @@
     "price": 50,
     "cur": "USD",
     "note": "1963 original HC; 3 vols $150",
-    "status": "owned"
+    "status": "owned",
+    "_idx": 61
   },
   {
     "cat": "General / Popular",
@@ -509,7 +572,8 @@
     "price": 50,
     "cur": "USD",
     "note": "1964 original HC",
-    "status": "owned"
+    "status": "owned",
+    "_idx": 62
   },
   {
     "cat": "General / Popular",
@@ -518,7 +582,8 @@
     "price": 50,
     "cur": "USD",
     "note": "1965 original HC",
-    "status": "owned"
+    "status": "owned",
+    "_idx": 63
   },
   {
     "cat": "General / Popular",
@@ -526,7 +591,8 @@
     "author": "Feynman, R.P. et al.",
     "price": 80000,
     "cur": "KRW",
-    "status": "owned"
+    "status": "owned",
+    "_idx": 64
   },
   {
     "cat": "General / Popular",
@@ -534,7 +600,8 @@
     "author": "Penrose, R.",
     "price": 59900,
     "cur": "KRW",
-    "status": "owned"
+    "status": "owned",
+    "_idx": 65
   },
   {
     "cat": "General / Popular",
@@ -542,7 +609,8 @@
     "author": "Hawking, S. & Mlodinow, L.",
     "price": 21360,
     "cur": "KRW",
-    "status": "owned"
+    "status": "owned",
+    "_idx": 66
   },
   {
     "cat": "General / Popular",
@@ -551,24 +619,28 @@
     "price": 43000,
     "cur": "KRW",
     "note": "Keepsake",
-    "status": "owned"
+    "status": "owned",
+    "_idx": 67
   },
   {
     "cat": "Many-Body",
     "title": "Many-Particle Physics (3rd)",
     "author": "Mahan, G.D.",
-    "price": null,
-    "cur": null,
-    "note": "Top priority",
-    "status": "wishlist"
+    "price": 400,
+    "cur": "USD",
+    "note": "",
+    "status": "owned",
+    "_idx": 68
   },
   {
     "cat": "Many-Body",
     "title": "Many-Body Quantum Theory in Condensed Matter Physics",
     "author": "Bruus, H. & Flensberg, K.",
-    "price": null,
-    "cur": null,
-    "status": "wishlist"
+    "price": 135,
+    "cur": "USD",
+    "note": "",
+    "status": "owned",
+    "_idx": 69
   },
   {
     "cat": "Condensed Matter",
@@ -577,7 +649,8 @@
     "price": null,
     "cur": null,
     "note": "Directly relevant to research",
-    "status": "wishlist"
+    "status": "wishlist",
+    "_idx": 70
   },
   {
     "cat": "L&L Series",
@@ -586,6 +659,7 @@
     "price": null,
     "cur": null,
     "note": "Complete the series",
-    "status": "wishlist"
+    "status": "wishlist",
+    "_idx": 71
   }
 ]
