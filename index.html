@@ -242,18 +242,46 @@ var CATS = ["Quantum Mechanics","Classical Mechanics","Electrodynamics","L&L Ser
 
 var books, rates = null, target = "KRW", openCat = null, currentTab = "owned", searchMode = "library", searchQuery = "", marketTimer = null;
 
-// Init books from storage or defaults
-try {
-  var stored = localStorage.getItem("book_collection_v3");
-  if (stored) { books = JSON.parse(stored); }
-  else {
-    var old = localStorage.getItem("book_collection_v2") || localStorage.getItem("book_collection");
-    if (old) { books = JSON.parse(old).map(function(b){ b.status = b.status || "owned"; return b; }); }
-    else { books = JSON.parse(JSON.stringify(DEFAULT_BOOKS)); }
-  }
-} catch(e) { books = JSON.parse(JSON.stringify(DEFAULT_BOOKS)); }
+// --- MODE -------------------------------------------------------------
+// Share mode (default, no query string): always renders books.json from the
+//   repository. Identical for every visitor; localStorage is ignored; read-only.
+// Edit mode (?edit=1): previous behaviour. localStorage is the source of
+//   truth and all edits persist locally. Publish by Export > JSON, then
+//   committing the downloaded books.json to the repository.
+var EDIT_MODE = /(^|[?&])edit(=|&|$)/.test(location.search);
+var STORAGE_KEY = "book_collection_v3";
+var DATA_URL = "books.json";
 
-function save() { localStorage.setItem("book_collection_v3", JSON.stringify(books)); }
+books = JSON.parse(JSON.stringify(DEFAULT_BOOKS)); // fallback until load resolves
+
+function readLocal() {
+  try {
+    var stored = localStorage.getItem(STORAGE_KEY);
+    if (stored) return JSON.parse(stored);
+    var old = localStorage.getItem("book_collection_v2") || localStorage.getItem("book_collection");
+    if (old) return JSON.parse(old);
+  } catch(e) {}
+  return null;
+}
+
+// Resolves books, then invokes done(). Never rejects.
+function loadBooks(done) {
+  fetch(DATA_URL + "?t=" + Date.now(), { cache: "no-store" })
+    .then(function(r) { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
+    .then(function(d) { return Array.isArray(d) ? d : (d && Array.isArray(d.books) ? d.books : null); })
+    .catch(function() { return null; })
+    .then(function(published) {
+      var local = EDIT_MODE ? readLocal() : null;
+      var src = local || published || DEFAULT_BOOKS;
+      books = JSON.parse(JSON.stringify(src)).map(function(b) { b.status = b.status || "owned"; return b; });
+      done();
+    });
+}
+
+function save() {
+  if (!EDIT_MODE) return;              // share mode never writes
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(books)); } catch(e) {}
+}
 function cvt(a, f, t) { if (!rates || !f || !a) return null; return (a / (rates[f] || 1)) * (rates[t] || 1); }
 function fmt(v, c) { if (v == null) return "\u2014"; if (c === "KRW" || c === "JPY") return Math.round(v).toLocaleString("en"); return v.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ","); }
 
@@ -463,11 +491,13 @@ function showModal(title, fields, onSave, extraBtns, extraHTML) {
   if (extraHTML) h += extraHTML;
   h += '<div class="actions">';
   if (extraBtns) extraBtns.forEach(function(b) { h += '<button class="btn ' + (b.cls || '') + '" id="m-' + b.id + '">' + b.text + '</button>'; });
-  h += '<button class="btn" id="m-cancel">Cancel</button><button class="btn btn-primary" id="m-save">Save</button></div></div></div>';
+  h += '<button class="btn" id="m-cancel">' + (onSave ? "Cancel" : "Close") + '</button>';
+  if (onSave) h += '<button class="btn btn-primary" id="m-save">Save</button>';
+  h += '</div></div></div>';
   r.innerHTML = h;
   document.getElementById("m-cancel").onclick = function() { r.innerHTML = ""; };
   document.getElementById("mo").onclick = function(e) { if (e.target.id === "mo") r.innerHTML = ""; };
-  document.getElementById("m-save").onclick = function() { onSave(); r.innerHTML = ""; save(); render(); };
+  if (onSave) document.getElementById("m-save").onclick = function() { onSave(); r.innerHTML = ""; save(); render(); };
   if (extraBtns) extraBtns.forEach(function(b) {
     var el = document.getElementById("m-" + b.id);
     if (el) el.onclick = function() { if (b.confirm && !confirm(b.confirm)) return; b.action(); r.innerHTML = ""; save(); render(); };
@@ -476,6 +506,16 @@ function showModal(title, fields, onSave, extraBtns, extraHTML) {
 
 function openEditModal(idx) {
   var b = books[idx];
+  if (!EDIT_MODE) {
+    var meta = [];
+    if (b.author) meta.push(b.author);
+    if (b.cat) meta.push(b.cat);
+    if (b.price != null && b.cur) meta.push((SYM[b.cur] || "") + fmt(b.price, b.cur) + " " + b.cur);
+    if (b.note) meta.push(b.note);
+    var info = '<div class="hint" style="margin:0 0 10px;line-height:1.7;">' + meta.join("<br>") + '</div>';
+    showModal(b.title, [], null, null, info + storeLinks(b.title, b.author, b.isbn13, b.isbn10, false));
+    return;
+  }
   var btns = [{ id: "del", text: "Delete", cls: "btn-danger", confirm: "Delete this entry?", action: function() { books.splice(idx, 1); } }];
   if ((b.status || "owned") === "wishlist") btns.unshift({ id: "move", text: "Move to Collection", cls: "btn-accent", action: function() { books[idx].status = "owned"; } });
   else btns.unshift({ id: "move", text: "Move to Wishlist", cls: "", action: function() { books[idx].status = "wishlist"; } });
@@ -523,7 +563,7 @@ document.getElementById("imp-xlsx").onclick = function() { document.getElementBy
 function exportJSON() {
   var blob = new Blob([JSON.stringify(books, null, 2)], { type: "application/json" });
   var a = document.createElement("a"); a.href = URL.createObjectURL(blob);
-  a.download = "book_collection_" + new Date().toISOString().slice(0, 10) + ".json"; a.click();
+  a.download = "books.json"; a.click();   // commit this file to publish
 }
 
 function exportExcel() {
@@ -676,6 +716,14 @@ document.getElementById("fileXlsx").onchange = function(e) {
 
 // --- INIT ---
 (function init() {
+  if (!EDIT_MODE) {
+    var ab = document.getElementById("add-btn"); if (ab) ab.style.display = "none";
+    var di = document.getElementById("dd-import"); if (di) di.style.display = "none";
+  }
+
+  loadBooks(function() { render(); loadRates(); });
+
+  function loadRates() {
   fetch("https://api.exchangerate-api.com/v4/latest/USD")
     .then(function(r) { return r.json(); })
     .then(function(data) { rates = data.rates; afterRates(); })
@@ -685,6 +733,8 @@ document.getElementById("fileXlsx").onchange = function(e) {
         .then(function(data) { rates = data.rates; afterRates(); })
         .catch(function() { document.getElementById("total-display").textContent = "Failed to load rates"; render(); });
     });
+  }
+
   function afterRates() {
     document.getElementById("timestamp").textContent = "Rates updated: " + new Date().toLocaleString("en-US", { timeZone: "Asia/Seoul", dateStyle: "medium", timeStyle: "short" });
     render();
