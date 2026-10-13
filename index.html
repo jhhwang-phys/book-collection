@@ -146,7 +146,7 @@ h1{font-size:28px;font-weight:700;letter-spacing:-.5px;border-bottom:2px solid #
   </div>
   <div class="summary-bar">
     <div class="left"><span class="total-val" id="total-display">...</span><span class="meta" id="count-info"></span></div>
-    <select id="currency-select"><option value="KRW">KRW</option><option value="USD">USD</option><option value="EUR">EUR</option><option value="GBP">GBP</option><option value="JPY">JPY</option></select>
+    <select id="currency-select"><option value="KRW">KRW</option><option value="USD" selected>USD</option><option value="EUR">EUR</option><option value="GBP">GBP</option><option value="JPY">JPY</option></select>
   </div>
   <div class="notice" id="warning-box" style="display:none"></div>
   <div class="cat-list" id="cat-list"></div>
@@ -240,7 +240,7 @@ var CAT_COLORS = {"Quantum Mechanics":"#e8f0e0","Classical Mechanics":"#f5e8da",
 var SYM = {USD:"$",EUR:"\u20ac",GBP:"\u00a3",KRW:"\u20a9",JPY:"\u00a5"};
 var CATS = ["Quantum Mechanics","Classical Mechanics","Electrodynamics","L&L Series","Statistical Mechanics","Thermal Physics","Solid State","Condensed Matter","Many-Body","Phase Transitions","Group Theory","General Relativity","Mathematical Physics","Geometry / Topology","Mathematics","Computational Physics","General / Popular"];
 
-var books, rates = null, target = "KRW", openCat = null, currentTab = "owned", searchMode = "library", searchQuery = "", marketTimer = null;
+var books, rates = null, target = "USD", openCat = null, currentTab = "owned", searchMode = "library", searchQuery = "", marketTimer = null;
 
 // Init books from storage or defaults
 try {
